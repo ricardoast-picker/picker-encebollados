@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Picker × Encebollados CDL — Sesión 2</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: hsl(212 100% 97%); --card: hsl(0 0% 100%); --border: hsl(214 33% 91%);
+      --text: hsl(229 35% 16%); --sub: hsl(222 18% 38%); --muted: hsl(216 30% 60%);
+      --celeste: hsl(193 100% 45%); --celeste-dim: hsl(193 100% 45% / .12); --celeste-mid: hsl(193 100% 45% / .3);
+      --green: hsl(162 100% 36%); --green-dim: hsl(162 100% 44% / .12); --green-mid: hsl(162 100% 44% / .3); --green-text: hsl(162 100% 28%);
+      --amber: hsl(43 100% 45%); --amber-bg: hsl(43 100% 67% / .15); --amber-mid: hsl(43 100% 45% / .3);
+      --red: hsl(346 100% 45%); --red-bg: hsl(346 100% 63% / .1); --red-mid: hsl(346 100% 45% / .25);
+    }
+    html, body { height: 100%; background: var(--bg); font-family: 'Montserrat', sans-serif; color: var(--text); overflow: hidden; }
+    #deck { width: 100vw; height: 100vh; position: relative; }
+    .slide { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 44px 68px; opacity: 0; transform: translateX(36px); transition: opacity .4s cubic-bezier(.4,0,.2,1), transform .4s cubic-bezier(.4,0,.2,1); pointer-events: none; overflow: hidden; background: var(--bg); }
+    .slide.active { opacity: 1; transform: translateX(0); pointer-events: all; }
+    .slide.exit { opacity: 0; transform: translateX(-36px); }
+
+    #nav { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 14px; z-index: 100; }
+    .nav-btn { width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--border); background: var(--card); color: var(--muted); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .2s; box-shadow: 0 1px 4px hsl(229 35% 16% / .08); }
+    .nav-btn:hover { border-color: var(--celeste); color: var(--celeste); }
+    .nav-btn:disabled { opacity: .35; cursor: default; }
+    .nav-btn svg { width: 15px; height: 15px; }
+    #indicators { display: flex; gap: 6px; align-items: center; }
+    .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border); transition: all .25s; cursor: pointer; }
+    .dot.on { background: var(--celeste); width: 22px; border-radius: 3px; }
+    #slide-num { position: fixed; top: 22px; right: 28px; font-size: 11px; color: var(--muted); letter-spacing: .05em; font-weight: 600; }
+
+    .content { position: relative; z-index: 1; width: 100%; max-width: 1080px; }
+    .tag { display: inline-block; font-size: 10px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; padding: 4px 12px; border-radius: 4px; margin-bottom: 16px; }
+    .tag.blue  { color: var(--celeste); border: 1px solid var(--celeste-mid); background: var(--celeste-dim); }
+    .tag.green { color: var(--green-text); border: 1px solid var(--green-mid); background: var(--green-dim); }
+    .tag.amber { color: var(--amber); border: 1px solid var(--amber-mid); background: var(--amber-bg); }
+    .tag.red   { color: var(--red); border: 1px solid var(--red-mid); background: var(--red-bg); }
+
+    h1 { font-size: clamp(28px, 3.8vw, 50px); font-weight: 800; line-height: 1.07; }
+    h2 { font-size: clamp(16px, 2.2vw, 26px); font-weight: 700; line-height: 1.2; }
+    h3 { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 10px; }
+
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 18px 22px; box-shadow: 0 1px 6px hsl(229 35% 16% / .05); }
+    .card-green  { background: var(--green-dim); border: 1px solid var(--green-mid); border-radius: 14px; padding: 16px 20px; }
+    .card-amber  { background: var(--amber-bg); border: 1px solid var(--amber-mid); border-radius: 14px; padding: 16px 20px; }
+    .card-red    { background: var(--red-bg); border: 1px solid var(--red-mid); border-radius: 14px; padding: 16px 20px; }
+    .card-celeste{ background: var(--celeste-dim); border: 1px solid var(--celeste-mid); border-radius: 14px; padding: 16px 20px; }
+
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; width: 100%; }
+    .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; width: 100%; }
+    .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; width: 100%; }
+
+    .stat { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }
+    .stat .val { font-size: clamp(18px, 2.4vw, 32px); font-weight: 800; }
+    .stat .val.g { color: var(--green-text); } .stat .val.b { color: var(--celeste); } .stat .val.a { color: var(--amber); } .stat .val.r { color: var(--red); }
+    .stat .lbl { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; margin-top: 2px; }
+    .stat .desc { font-size: 12px; color: var(--sub); margin-top: 3px; }
+
+    .pill { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 20px; }
+    .pill.g { background: var(--green-dim); color: var(--green-text); border: 1px solid var(--green-mid); }
+    .pill.b { background: var(--celeste-dim); color: var(--celeste); border: 1px solid var(--celeste-mid); }
+    .pill.a { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-mid); }
+    .pill.r { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-mid); }
+
+    .row-list { display: flex; flex-direction: column; gap: 8px; }
+    .row-item { display: flex; align-items: flex-start; gap: 9px; font-size: 14px; font-weight: 500; color: var(--sub); line-height: 1.5; }
+    .row-dot { min-width: 7px; height: 7px; border-radius: 50%; background: var(--celeste); margin-top: 6px; flex-shrink: 0; }
+    .row-dot.g { background: var(--green); } .row-dot.a { background: var(--amber); } .row-dot.r { background: var(--red); }
+
+    .q-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 10px 13px; display: flex; gap: 10px; align-items: flex-start; }
+    .q-num { min-width: 22px; height: 22px; border-radius: 50%; background: var(--celeste-dim); border: 1px solid var(--celeste-mid); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; color: var(--celeste); flex-shrink: 0; }
+    .q-text { font-size: 13px; font-weight: 500; color: var(--sub); line-height: 1.45; }
+    .q-text strong { color: var(--text); font-weight: 700; }
+
+    .speech-block { background: var(--text); color: white; border-radius: 12px; padding: 14px 18px; font-size: 13px; font-weight: 500; line-height: 1.6; font-style: italic; }
+    .speech-block .attr { font-size: 11px; font-weight: 700; color: var(--muted); margin-top: 8px; font-style: normal; text-transform: uppercase; letter-spacing: .08em; }
+
+    .section-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .12em; color: var(--celeste); margin-bottom: 8px; }
+    .divider { height: 1px; background: var(--border); margin: 10px 0; }
+
+    /* Slide 3 — guía demo sin scroll */
+    .slide-s3 { overflow: hidden; justify-content: flex-start; padding-top: 18px; padding-bottom: 50px; }
+    .s3 h2 { font-size: 15px !important; margin-bottom: 10px !important; }
+    .s3 .tag { margin-bottom: 8px !important; }
+    .s3 .grid4 { gap: 7px !important; }
+    .s3 .q-card { padding: 4px 9px !important; gap: 7px !important; }
+    .s3 .q-text { font-size: 10.5px !important; line-height: 1.3 !important; }
+    .s3 .q-num { min-width: 18px !important; height: 18px !important; font-size: 9px !important; }
+    .s3 .section-label { font-size: 9px !important; margin-bottom: 3px !important; }
+    .s3 .speech-block { padding: 8px 12px !important; font-size: 10px !important; line-height: 1.4 !important; }
+    .s3 .speech-block .attr { font-size: 9px !important; margin-top: 4px !important; }
+    .s3 .divider { margin: 3px 0 !important; }
+    .s3 .card { padding: 8px 10px !important; }
+    .s3 .row-item { font-size: 10.5px !important; line-height: 1.3 !important; }
+    .s3 .row-dot { margin-top: 4px !important; }
+  </style>
+</head>
+<body>
+<div id="deck">
+
+  <!-- ════════════════════════════════════
+       SLIDE 1 — COVER
+  ════════════════════════════════════ -->
+  <div class="slide active" id="s1">
+    <div class="content">
+      <div class="tag blue">Sesión 2 · Demo · Ecuador · 8 Jul 2026</div>
+      <h1 style="margin-bottom:10px;">Encebollados CDL<br><span style="color:var(--celeste);">Guayaquil · 5 locales</span></h1>
+      <p style="font-size:16px; color:var(--sub); font-weight:500; margin-bottom:32px;">Referido por Ricardo Mancero (Qik) · Canal propio vía WhatsApp · 2,000 env/mes · Escéptico pero abierto</p>
+
+      <div class="grid3" style="margin-bottom:24px;">
+        <div class="stat">
+          <div class="val b">2,000</div>
+          <div class="lbl">Envíos / mes</div>
+          <div class="desc">Canal propio · fuera de Rappi / Uber</div>
+        </div>
+        <div class="stat">
+          <div class="val a">$10</div>
+          <div class="lbl">Ticket promedio (USD)</div>
+          <div class="desc">50% efectivo · 40% transferencia · 10% link</div>
+        </div>
+        <div class="stat">
+          <div class="val r">100%</div>
+          <div class="lbl">Manual hoy</div>
+          <div class="desc">WhatsApp · sin tracking · sin SLA</div>
+        </div>
+      </div>
+
+      <div class="grid2">
+        <div class="card">
+          <div class="section-label">Contactos</div>
+          <div class="row-list">
+            <div class="row-item"><div class="row-dot b"></div><div><strong>Víctor Dueñas</strong> — Dueño / Gerente General · Economic Buyer ✅ · decide solo</div></div>
+            <div class="row-item"><div class="row-dot g"></div><div><strong>Ricardo Mancero</strong> — Partner Qik · Champion · coordina la relación y agenda la demo</div></div>
+          </div>
+        </div>
+        <div class="card-green">
+          <div class="section-label">Objetivo Sesión 2</div>
+          <div class="row-list">
+            <div class="row-item"><div class="row-dot g"></div><div>Mostrar flujo automático: pedido en Qik → Picker asigna motorizado → tracking en tiempo real</div></div>
+            <div class="row-item"><div class="row-dot g"></div><div>Demostrar módulo Cash: efectivo recaudado, registrado en plataforma, depósito semanal</div></div>
+            <div class="row-item"><div class="row-dot g"></div><div>Simular un envío en vivo — Víctor quiere probar antes de comprometerse</div></div>
+            <div class="row-item"><div class="row-dot g"></div><div>Presentar propuesta de piloto sin riesgo para cerrar el siguiente paso</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ════════════════════════════════════
+       SLIDE 2 — CONTEXTO S1 + FIT
+  ════════════════════════════════════ -->
+  <div class="slide" id="s2">
+    <div class="content">
+      <div class="tag amber">Contexto · Lo que sabemos de Sesión 1</div>
+      <h2 style="margin-bottom:20px;">Historia, operación confirmada y señal de compra</h2>
+
+      <div class="grid2" style="margin-bottom:14px;">
+
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <div class="card-red">
+            <div class="section-label">⚠️ Historia previa con Picker (2021) — el elefante en la sala</div>
+            <div class="row-list">
+              <div class="row-item"><div class="row-dot r"></div><div>Modelo multi-vendor: <strong>Spunity + Payments + Picker</strong> — cada actor cobró cuota fija + comisión</div></div>
+              <div class="row-item"><div class="row-dot r"></div><div>Motorizados (Uber) no confiables: no llegaban, tracking inconsistente</div></div>
+              <div class="row-item"><div class="row-dot r"></div><div>Resultado: cerró el canal, volvió a WhatsApp manual. Sigue pagando $7/mes al banco sin saberlo</div></div>
+              <div class="row-item"><div class="row-dot a"></div><div><strong>Objeción resuelta en S1:</strong> "¿Cuántos actores hay?" → Solo Picker. Un solo interlocutor, una sola factura</div></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="section-label">📊 Operación validada</div>
+            <div class="row-list">
+              <div class="row-item"><div class="row-dot b"></div><div>5 locales · 4 norte Guayaquil + 1 Vía Salitre</div></div>
+              <div class="row-item"><div class="row-dot b"></div><div>~2,000 envíos/mes canal propio · ticket $10 · distancia 0–2 km · ~25 min</div></div>
+              <div class="row-item"><div class="row-dot b"></div><div>Flota 100% externa (empresa de motorizados) · sin riders propios</div></div>
+              <div class="row-item"><div class="row-dot b"></div><div>2 personas gestionando WhatsApp todo el día · sin software</div></div>
+              <div class="row-item"><div class="row-dot b"></div><div>Sin tracking al cliente · sin SLA · sin métricas</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <div class="card-amber">
+            <div class="section-label">🎯 Señal de compra + perfil de decisión</div>
+            <p style="font-size:14px; color:var(--sub); line-height:1.55; margin-bottom:10px;">"Si es factible, práctico y conveniente, adelante." — <strong style="color:var(--text);">Víctor Dueñas, S1</strong></p>
+            <div class="row-list">
+              <div class="row-item"><div class="row-dot a"></div><div>Víctor decide solo — no hay comité, no hay jefe arriba</div></div>
+              <div class="row-item"><div class="row-dot a"></div><div>Es empírico: "me hice incrédulo y práctico — se prueba, si funciona, listo"</div></div>
+              <div class="row-item"><div class="row-dot a"></div><div>El piloto es el cierre — si la demo convence, arranca</div></div>
+            </div>
+          </div>
+
+          <div class="card-celeste">
+            <div class="section-label">✅ Por qué Picker encaja ahora</div>
+            <div class="row-list">
+              <div class="row-item"><div class="row-dot b"></div><div><strong>Un solo actor</strong> — Picker es dueño de toda la solución. Sin intermediarios</div></div>
+              <div class="row-item"><div class="row-dot b"></div><div><strong>Orquestador Uber + Rappi EC</strong> — motorizado más cercano disponible automáticamente</div></div>
+              <div class="row-item"><div class="row-dot b"></div><div><strong>Cash module</strong> — 50% efectivo gestionado, registrado, depositado semanalmente</div></div>
+              <div class="row-item"><div class="row-dot b"></div><div><strong>Tracking branded + WhatsApp</strong> — cliente ve su pedido sin costo adicional</div></div>
+              <div class="row-item"><div class="row-dot b"></div><div><strong>Integración Qik</strong> — automatización completa, las 2 personas de WhatsApp quedan libres</div></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="section-label">❌ Lo que NO aplica — no mencionar</div>
+            <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:4px;">
+              <span class="pill r">My Fleet — sin riders propios</span>
+              <span class="pill r">Shield — ticket $10 bajo umbral</span>
+              <span class="pill r">Datáfono delivery — no lo usa</span>
+              <span class="pill r">Flows complejos — vol. bajo</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ════════════════════════════════════
+       SLIDE 3 — GUÍA DEMO SESIÓN 2
+  ════════════════════════════════════ -->
+  <div class="slide slide-s3 s3" id="s3">
+    <div class="content">
+      <div class="tag blue" style="margin-bottom:8px;">Guía Demo · Sesión 2 · Encebollados CDL</div>
+      <h2 style="margin-bottom:10px;">Script · Flujo a mostrar · Objecionario · Cierre</h2>
+
+      <div class="grid4" style="align-items:start;">
+
+        <!-- COL 1: Apertura + Flujo demo -->
+        <div style="display:flex; flex-direction:column; gap:3px;">
+          <div class="speech-block">
+            "Víctor, en la sesión anterior resolviste tu principal duda: solo somos nosotros, sin intermediarios. Hoy te vamos a mostrar exactamente cómo funciona con tu operación. Al final haces un envío tú mismo."
+            <div class="attr">Apertura · recordar S1 · 1 min</div>
+          </div>
+
+          <div class="divider"></div>
+          <div class="section-label">Flujo a mostrar — en este orden</div>
+
+          <div class="q-card" style="background:var(--celeste-dim); border-color:var(--celeste-mid);">
+            <div class="q-num">1</div>
+            <div class="q-text"><strong>Qik recibe el pedido</strong> — cliente pide desde el menú digital. Sin WhatsApp manual.</div>
+          </div>
+          <div class="q-card" style="background:var(--celeste-dim); border-color:var(--celeste-mid);">
+            <div class="q-num">2</div>
+            <div class="q-text"><strong>Picker asigna automáticamente</strong> — busca Uber o Rappi más cercano. Sin que nadie lo haga manualmente.</div>
+          </div>
+          <div class="q-card" style="background:var(--celeste-dim); border-color:var(--celeste-mid);">
+            <div class="q-num">3</div>
+            <div class="q-text"><strong>Tracking en tiempo real</strong> — Víctor ve el motorizado en el panel. Cliente recibe WhatsApp automático.</div>
+          </div>
+          <div class="q-card" style="background:var(--celeste-dim); border-color:var(--celeste-mid);">
+            <div class="q-num">4</div>
+            <div class="q-text"><strong>Módulo Cash</strong> — mostrar el panel de recaudo: pedido efectivo → cobrado → registrado → depósito semanal a su cuenta.</div>
+          </div>
+          <div class="q-card" style="background:var(--celeste-dim); border-color:var(--celeste-mid);">
+            <div class="q-num">5</div>
+            <div class="q-text"><strong>Envío en vivo</strong> — invitar a Víctor a simularlo él mismo desde el dashboard.</div>
+          </div>
+        </div>
+
+        <!-- COL 2: Preguntas clave S2 -->
+        <div style="display:flex; flex-direction:column; gap:3px;">
+          <div class="section-label">Preguntas a resolver en S2</div>
+
+          <div class="q-card"><div class="q-num">Q1</div><div class="q-text"><strong>¿Cuánto cobras hoy al motorizado por envío?</strong> → para construir el business case</div></div>
+          <div class="q-card"><div class="q-num">Q2</div><div class="q-text">¿Tienes algún contrato o compromiso con tu empresa de motorizados actual?</div></div>
+          <div class="q-card"><div class="q-num">Q3</div><div class="q-text"><strong>¿Cuántos pedidos rechazas o se quedan sin motorizado</strong> en horas pico?</div></div>
+          <div class="q-card"><div class="q-num">Q4</div><div class="q-text">¿Cobras algo al cliente por el envío? ¿Cuánto?</div></div>
+          <div class="q-card"><div class="q-num">Q5</div><div class="q-text">¿El 50% de efectivo — quién lo recibe hoy, cómo lo llevan al local?</div></div>
+          <div class="q-card"><div class="q-num">Q6</div><div class="q-text">¿Qué necesitas ver en la demo para sentirte cómodo arrancando un piloto?</div></div>
+          <div class="q-card"><div class="q-num">Q7</div><div class="q-text">¿Hay alguien más del equipo que deba ver esto antes de decidir?</div></div>
+
+          <div class="divider"></div>
+          <div class="section-label">Dato clave a confirmar</div>
+          <div class="q-card" style="background:var(--amber-bg); border-color:var(--amber-mid);">
+            <div class="q-num" style="background:var(--amber-bg);border-color:var(--amber-mid);color:var(--amber);">!</div>
+            <div class="q-text"><strong>Volumen por local</strong> — 2K total / 5 locales = ~400 env/mes por local. Confirmar si es parejo o hay locales con más volumen → afecta piloto.</div>
+          </div>
+        </div>
+
+        <!-- COL 3: Objecionario -->
+        <div style="display:flex; flex-direction:column; gap:3px;">
+          <div class="section-label">Objecionario</div>
+
+          <div class="q-card" style="background:var(--amber-bg); border-color:var(--amber-mid);">
+            <div class="q-num" style="background:var(--amber-bg);border-color:var(--amber-mid);color:var(--amber);">!</div>
+            <div class="q-text"><strong>"Ya pasé por esto antes con ustedes"</strong><br/>→ Lo entendemos. Por eso hoy te mostramos cómo funciona antes de pedirte cualquier compromiso. Pruébalo tú mismo.</div>
+          </div>
+          <div class="q-card" style="background:var(--amber-bg); border-color:var(--amber-mid);">
+            <div class="q-num" style="background:var(--amber-bg);border-color:var(--amber-mid);color:var(--amber);">!</div>
+            <div class="q-text"><strong>"¿Cuánto me cuesta?"</strong><br/>→ Pagas solo por envío realizado. Sin cuota fija. Sin mínimo de volumen. Solo cuando opera.</div>
+          </div>
+          <div class="q-card" style="background:var(--amber-bg); border-color:var(--amber-mid);">
+            <div class="q-num" style="background:var(--amber-bg);border-color:var(--amber-mid);color:var(--amber);">!</div>
+            <div class="q-text"><strong>"¿Y si el motorizado no llega?"</strong><br/>→ El orquestador busca en Uber Y Rappi simultáneamente. Si uno no tiene disponibilidad, toma el otro automáticamente.</div>
+          </div>
+          <div class="q-card" style="background:var(--amber-bg); border-color:var(--amber-mid);">
+            <div class="q-num" style="background:var(--amber-bg);border-color:var(--amber-mid);color:var(--amber);">!</div>
+            <div class="q-text"><strong>"¿Qué pasa con el efectivo si el motorizado se lo lleva?"</strong><br/>→ Todo queda registrado en el panel en tiempo real. Picker consolida y deposita semanalmente a tu cuenta.</div>
+          </div>
+          <div class="q-card" style="background:var(--amber-bg); border-color:var(--amber-mid);">
+            <div class="q-num" style="background:var(--amber-bg);border-color:var(--amber-mid);color:var(--amber);">!</div>
+            <div class="q-text"><strong>"¿Tengo que cambiar todo lo que tengo?"</strong><br/>→ No. El piloto arranca en 1–2 locales. Lo que funciona se escala, lo que no se ajusta. Sin compromiso.</div>
+          </div>
+
+          <div class="divider"></div>
+          <div class="section-label">Checklist de salida</div>
+          <div class="card" style="padding:8px 10px;">
+            <div class="row-list">
+              <div class="row-item"><div class="row-dot g"></div><div>✓ Víctor simuló un envío en vivo</div></div>
+              <div class="row-item"><div class="row-dot g"></div><div>✓ Costo por envío confirmado (Q1)</div></div>
+              <div class="row-item"><div class="row-dot g"></div><div>✓ Módulo Cash entendido y validado</div></div>
+              <div class="row-item"><div class="row-dot g"></div><div>✓ Fecha de piloto acordada en la sesión</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- COL 4: Speech cierre + piloto -->
+        <div style="display:flex; flex-direction:column; gap:3px;">
+          <div class="speech-block">
+            "Víctor, la única manera de saber si esto funciona para ti es probándolo. Te propongo un piloto en 1 local, 2 semanas, sin compromiso. Si no te convence, no hay ningún costo adicional. ¿Arrancamos?"
+            <div class="attr">Cierre · Speech de piloto · siempre en la misma sesión</div>
+          </div>
+
+          <div class="divider"></div>
+          <div class="section-label">Contexto partner Qik</div>
+          <div class="q-card" style="background:var(--green-dim); border-color:var(--green-mid);">
+            <div class="q-num" style="background:var(--green-dim);border-color:var(--green-mid);color:var(--green-text);">Q</div>
+            <div class="q-text"><strong>Ricardo Mancero lidera la relación.</strong> Él agenda y coordina con Víctor. En la demo: Mancero muestra Qik, Ricardo Astorga muestra Picker. El flujo es conjunto — cliente pide en Qik → Picker actúa automáticamente.</div>
+          </div>
+
+          <div class="divider"></div>
+          <div class="section-label">Carriers Ecuador</div>
+          <div class="q-card" style="background:var(--celeste-dim); border-color:var(--celeste-mid);">
+            <div class="q-num" style="background:var(--celeste-dim);border-color:var(--celeste-mid);color:var(--celeste);">EC</div>
+            <div class="q-text">Uber · Rappi Ecuador activos en Guayaquil. Distancia promedio 0–2 km → tarifa base.</div>
+          </div>
+
+          <div class="divider"></div>
+          <div class="speech-block">
+            "Lo que Picker hace es convertir cada pedido de WhatsApp en un envío rastreado, automatizado y con el motorizado más cercano disponible. Sin que tus dos personas tengan que coordinar nada."
+            <div class="attr">Speech de valor · usar tras mostrar el flujo</div>
+          </div>
+
+          <div class="card-green" style="margin-top:4px;">
+            <div class="section-label">Propuesta piloto</div>
+            <div style="font-size:13px; font-weight:800; color:var(--green-text); margin-bottom:4px;">1 local · 2 semanas · sin compromiso</div>
+            <div style="font-size:11px; color:var(--sub);">Sin cuota fija · Pagas solo envíos realizados · Picker deposita efectivo semanalmente</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div><!-- /deck -->
+
+<div id="nav">
+  <button class="nav-btn" onclick="prev()" id="btn-prev" disabled>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+  <div id="indicators">
+    <div class="dot on" onclick="goTo(0)"></div>
+    <div class="dot" onclick="goTo(1)"></div>
+    <div class="dot" onclick="goTo(2)"></div>
+  </div>
+  <button class="nav-btn" onclick="next()" id="btn-next">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+  </button>
+</div>
+<div id="slide-num">1 / 3</div>
+
+<script>
+  let current = 0;
+  const total = 3;
+  function goTo(n) {
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.dot');
+    slides[current].classList.remove('active');
+    slides[current].classList.add('exit');
+    setTimeout(() => slides[current].classList.remove('exit'), 400);
+    dots[current].classList.remove('on');
+    current = n;
+    slides[current].classList.add('active');
+    dots[current].classList.add('on');
+    document.getElementById('slide-num').textContent = `${current + 1} / ${total}`;
+    document.getElementById('btn-prev').disabled = current === 0;
+    document.getElementById('btn-next').disabled = current === total - 1;
+  }
+  function next() { if (current < total - 1) goTo(current + 1); }
+  function prev() { if (current > 0) goTo(current - 1); }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') next();
+    if (e.key === 'ArrowLeft') prev();
+  });
+</script>
+</body>
+</html>
