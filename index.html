@@ -1,1135 +1,651 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Picker × Encebollados CDL — Deal Brief</title>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Picker × Encebollados CDL — Propuesta Comercial</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
 <style>
-  :root {
-    --bg: hsl(212 100% 97%);
-    --card: white;
-    --border: hsl(214 33% 91%);
-    --text: hsl(229 35% 16%);
-    --sub: hsl(222 18% 38%);
-    --muted: hsl(216 30% 60%);
-    --celeste: hsl(193 100% 45%);
-    --green-text: hsl(162 100% 28%);
-    --amber: hsl(43 100% 45%);
-    --red: hsl(346 100% 45%);
-    --green-bg: hsl(162 60% 94%);
-    --amber-bg: hsl(43 100% 94%);
-    --red-bg: hsl(346 100% 96%);
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: 'Montserrat', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    height: 100vh;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-  }
+:root {
+  --bg: #F2F8FF;
+  --dark: #1A1F36;
+  --celeste: #00B2E3;
+  --celeste2: #0099C7;
+  --verde: #00DE9B;
+  --text: #1A1F36;
+  --sub: #4A5068;
+  --muted: #8A92B0;
+  --card: #ffffff;
+  --border: #DDE6F5;
+  --amber: #F59E0B;
+  --red: #EF4444;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+body {
+  font-family: 'Montserrat', sans-serif;
+  background: var(--dark);
+  color: var(--text);
+}
 
-  /* NAV */
-  nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.6rem 2rem;
-    background: white;
-    border-bottom: 1px solid var(--border);
-    flex-shrink: 0;
-  }
-  .nav-brand { font-weight: 800; font-size: 0.9rem; color: var(--celeste); letter-spacing: 0.05em; }
-  .nav-tabs { display: flex; gap: 0.25rem; }
-  .nav-tab {
-    padding: 0.35rem 0.85rem;
-    font-size: 0.75rem;
-    font-weight: 600;
-    border-radius: 6px;
-    cursor: pointer;
-    border: none;
-    background: transparent;
-    color: var(--muted);
-    font-family: 'Montserrat', sans-serif;
-    transition: all 0.15s;
-  }
-  .nav-tab:hover { background: var(--bg); color: var(--sub); }
-  .nav-tab.active { background: var(--celeste); color: white; }
-  .nav-arrows { display: flex; gap: 0.5rem; align-items: center; }
-  .nav-arrows button {
-    width: 28px; height: 28px;
-    border: 1px solid var(--border);
-    background: white;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.85rem;
-    color: var(--sub);
-    display: flex; align-items: center; justify-content: center;
-  }
-  .nav-arrows button:hover { background: var(--bg); }
-  .slide-counter { font-size: 0.7rem; color: var(--muted); font-weight: 600; }
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: var(--dark);
+  display: flex; align-items: center; gap: 0;
+  height: 44px; padding: 0 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+nav .logo { color: var(--celeste); font-weight: 800; font-size: 14px; margin-right: 24px; letter-spacing: 1px; }
+nav button {
+  background: none; border: none; cursor: pointer;
+  color: rgba(255,255,255,0.5); font-family: 'Montserrat', sans-serif;
+  font-size: 11px; font-weight: 600; padding: 0 14px; height: 44px;
+  letter-spacing: 0.5px; text-transform: uppercase; transition: all .2s;
+  border-bottom: 2px solid transparent; white-space: nowrap;
+}
+nav button:hover { color: #fff; }
+nav button.active { color: var(--celeste); border-bottom-color: var(--celeste); }
 
-  /* SLIDES */
-  .slides-wrapper { flex: 1; overflow: hidden; position: relative; }
-  .slide {
-    position: absolute; inset: 0;
-    padding: 1.5rem 2.5rem 1.5rem;
-    overflow-y: auto;
-    display: none;
-    flex-direction: column;
-    gap: 1rem;
-  }
-  .slide.active { display: flex; }
+/* ── SLIDES ── */
+.slides-wrap { position: fixed; top: 44px; left: 0; right: 0; bottom: 0; overflow: hidden; }
+.slide {
+  display: none; position: absolute; inset: 0;
+  overflow-y: auto; overflow-x: hidden;
+}
+.slide.active { display: flex; flex-direction: column; }
 
-  /* TYPOGRAPHY */
-  h1 { font-size: 1.6rem; font-weight: 800; line-height: 1.2; }
-  h2 { font-size: 1.1rem; font-weight: 700; color: var(--text); margin-bottom: 0.35rem; }
-  h3 { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 0.5rem; }
-  p { font-size: 0.875rem; color: var(--sub); line-height: 1.5; }
+/* ── SLIDE LIGHT ── */
+.slide-light { background: var(--bg); }
+.slide-light .inner { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 40px 64px; max-width: 960px; margin: 0 auto; width: 100%; }
 
-  /* CARDS */
-  .card { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.25rem; }
-  .card-grid { display: grid; gap: 0.75rem; }
-  .grid-2 { grid-template-columns: 1fr 1fr; }
-  .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
-  .grid-4 { grid-template-columns: repeat(4, 1fr); }
+/* ── SLIDE DARK ── */
+.slide-dark { background: var(--dark); }
+.slide-dark .inner { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 40px 64px; max-width: 960px; margin: 0 auto; width: 100%; color: white; }
 
-  /* STAT CHIPS */
-  .stat-chip { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 0.75rem 1rem; display: flex; flex-direction: column; gap: 0.2rem; }
-  .stat-chip .value { font-size: 1.5rem; font-weight: 800; color: var(--celeste); line-height: 1; }
-  .stat-chip .value.red { color: var(--red); }
-  .stat-chip .value.amber { color: var(--amber); }
-  .stat-chip .value.green { color: var(--green-text); }
-  .stat-chip .label { font-size: 0.75rem; color: var(--sub); font-weight: 600; }
-  .stat-chip .desc { font-size: 0.72rem; color: var(--muted); margin-top: 0.1rem; }
+/* ── COVER ── */
+.cover-slide { background: var(--dark); }
+.cover-slide .inner { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 48px 72px; }
+.cover-tag { display: inline-block; background: var(--celeste); color: white; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 5px 14px; border-radius: 20px; margin-bottom: 28px; }
+.cover-title { font-size: 46px; font-weight: 900; color: white; line-height: 1.1; margin-bottom: 16px; }
+.cover-title span { color: var(--celeste); }
+.cover-sub { font-size: 17px; color: rgba(255,255,255,0.55); margin-bottom: 48px; font-weight: 500; }
+.cover-meta { display: flex; gap: 40px; }
+.cover-meta-item { display: flex; flex-direction: column; gap: 4px; }
+.cover-meta-item .label { font-size: 10px; color: rgba(255,255,255,0.35); font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; }
+.cover-meta-item .value { font-size: 15px; color: rgba(255,255,255,0.85); font-weight: 600; }
 
-  /* BADGES */
-  .badge { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.03em; }
-  .badge-green { background: var(--green-bg); color: var(--green-text); }
-  .badge-amber { background: var(--amber-bg); color: hsl(43 100% 30%); }
-  .badge-red { background: var(--red-bg); color: var(--red); }
-  .badge-blue { background: hsl(193 100% 92%); color: hsl(193 100% 25%); }
-  .badge-muted { background: var(--bg); color: var(--muted); border: 1px solid var(--border); }
+/* ── TYPOGRAPHY ── */
+.slide-tag { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--celeste); margin-bottom: 10px; }
+.slide-title { font-size: 30px; font-weight: 800; color: var(--text); line-height: 1.2; margin-bottom: 6px; }
+.slide-sub { font-size: 14px; color: var(--sub); margin-bottom: 28px; font-weight: 500; }
 
-  /* TABLE */
-  table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
-  th { text-align: left; padding: 0.4rem 0.75rem; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 700; border-bottom: 1px solid var(--border); }
-  td { padding: 0.5rem 0.75rem; border-bottom: 1px solid hsl(214 33% 95%); color: var(--sub); vertical-align: top; font-size: 0.875rem; }
-  tr:last-child td { border-bottom: none; }
-  td strong { color: var(--text); font-weight: 600; }
+.slide-dark .slide-tag { color: var(--celeste); }
+.slide-dark .slide-title { color: white; }
+.slide-dark .slide-sub { color: rgba(255,255,255,0.55); }
 
-  /* PILL LIST */
-  .pill-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-  .pill { padding: 0.2rem 0.65rem; border-radius: 20px; border: 1px solid var(--border); font-size: 0.78rem; font-weight: 600; color: var(--sub); background: white; }
-  .pill.red { background: var(--red-bg); border-color: hsl(346 100% 85%); color: var(--red); }
+/* ── STAT GRID ── */
+.stat-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-bottom: 20px; }
+.stat-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+  padding: 16px 18px;
+}
+.stat-card .stat-label { font-size: 10px; font-weight: 700; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+.stat-card .stat-value { font-size: 26px; font-weight: 800; color: var(--text); line-height: 1; }
+.stat-card .stat-unit { font-size: 12px; color: var(--sub); font-weight: 600; margin-top: 4px; }
+.stat-card.accent { background: var(--celeste); border-color: var(--celeste); }
+.stat-card.accent .stat-label { color: rgba(255,255,255,0.7); }
+.stat-card.accent .stat-value { color: white; }
+.stat-card.accent .stat-unit { color: rgba(255,255,255,0.8); }
 
-  /* PAIN BLOCK */
-  .pain-block { border-left: 3px solid var(--red); background: var(--red-bg); padding: 0.6rem 0.85rem; border-radius: 0 8px 8px 0; margin: 0.15rem 0; }
-  .pain-block p { color: var(--text); font-size: 0.875rem; }
-  .amber-block { border-left: 3px solid var(--amber); background: var(--amber-bg); padding: 0.6rem 0.85rem; border-radius: 0 8px 8px 0; }
-  .amber-block p { font-size: 0.875rem; }
-  .success-block { border-left: 3px solid var(--green-text); background: var(--green-bg); padding: 0.6rem 0.85rem; border-radius: 0 8px 8px 0; }
-  .success-block p { font-size: 0.875rem; color: var(--text); }
+/* ── INFO ROW ── */
+.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.info-row { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; display: flex; flex-direction: column; gap: 3px; }
+.info-row .ir-label { font-size: 10px; color: var(--muted); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+.info-row .ir-value { font-size: 14px; color: var(--text); font-weight: 700; }
 
-  /* QUESTION TRACKER */
-  .q-row { display: flex; align-items: flex-start; gap: 0.6rem; padding: 0.5rem 0.75rem; border-bottom: 1px solid hsl(214 33% 95%); }
-  .q-row:last-child { border-bottom: none; }
-  .q-num { font-size: 0.72rem; font-weight: 700; color: var(--muted); min-width: 28px; padding-top: 0.1rem; }
-  .q-text { flex: 1; font-size: 0.875rem; font-weight: 600; color: var(--text); line-height: 1.4; }
-  .q-answer { font-size: 0.8rem; color: var(--sub); font-style: italic; margin-top: 0.2rem; font-weight: 400; }
-  .q-status { min-width: 20px; padding-top: 0.1rem; font-size: 0.85rem; }
+/* ── PAIN / DIAG ── */
+.pain-list { display: flex; flex-direction: column; gap: 14px; }
+.pain-item { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px 22px; border-left: 4px solid var(--red); }
+.pain-item.amber { border-left-color: var(--amber); }
+.pain-num { font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: var(--red); margin-bottom: 6px; }
+.pain-item.amber .pain-num { color: var(--amber); }
+.pain-title { font-size: 17px; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+.pain-desc { font-size: 13px; color: var(--sub); line-height: 1.6; }
+.pain-data { margin-top: 10px; display: flex; gap: 12px; flex-wrap: wrap; }
+.pain-chip { background: #FEF2F2; border: 1px solid #FECACA; border-radius: 6px; padding: 4px 10px; font-size: 11px; font-weight: 700; color: var(--red); }
+.pain-chip.amber-chip { background: #FFFBEB; border-color: #FDE68A; color: #92400E; }
 
-  /* MEDDPICC */
-  .medd-row { display: grid; grid-template-columns: 140px 90px 1fr; gap: 0.5rem; align-items: start; padding: 0.5rem 0.75rem; border-bottom: 1px solid hsl(214 33% 95%); font-size: 0.875rem; }
-  .medd-row:last-child { border-bottom: none; }
-  .medd-element { font-weight: 700; color: var(--text); }
-  .medd-detail { color: var(--sub); line-height: 1.4; }
+/* ── SOLUTION ── */
+.sol-flow { display: flex; align-items: center; justify-content: center; gap: 0; margin: 20px 0 24px; flex-wrap: wrap; }
+.sol-box { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 18px 24px; text-align: center; min-width: 140px; }
+.sol-box .sb-icon { font-size: 28px; margin-bottom: 8px; }
+.sol-box .sb-name { font-size: 15px; font-weight: 800; color: var(--text); }
+.sol-box .sb-desc { font-size: 11px; color: var(--sub); margin-top: 3px; }
+.sol-box.highlight { background: var(--celeste); border-color: var(--celeste); }
+.sol-box.highlight .sb-name { color: white; }
+.sol-box.highlight .sb-desc { color: rgba(255,255,255,0.8); }
+.sol-arrow { font-size: 22px; color: var(--muted); padding: 0 10px; }
+.sol-note { background: #EFF9FF; border: 1px solid #BAE6FD; border-radius: 10px; padding: 14px 18px; font-size: 13px; color: #0369A1; font-weight: 600; text-align: center; }
+.sol-note strong { color: var(--celeste2); }
 
-  /* DEMO ITEMS */
-  .demo-item { display: flex; align-items: flex-start; gap: 0.65rem; padding: 0.6rem 0; border-bottom: 1px solid hsl(214 33% 95%); }
-  .demo-item:last-child { border-bottom: none; }
-  .demo-num { width: 26px; height: 26px; border-radius: 50%; background: var(--celeste); color: white; font-size: 0.72rem; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 0.1rem; }
-  .demo-content { flex: 1; }
-  .demo-content strong { font-size: 0.875rem; color: var(--text); display: block; margin-bottom: 0.15rem; }
-  .demo-content span { font-size: 0.8rem; color: var(--sub); line-height: 1.4; }
+/* ── BENEFIT ── */
+.benefit-header { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+.benefit-num { width: 44px; height: 44px; border-radius: 50%; background: var(--celeste); color: white; font-size: 20px; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.benefit-title { font-size: 26px; font-weight: 800; color: var(--text); }
+.benefit-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.benefit-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
+.benefit-card .bc-icon { font-size: 22px; margin-bottom: 8px; }
+.benefit-card .bc-title { font-size: 13px; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+.benefit-card .bc-desc { font-size: 12px; color: var(--sub); line-height: 1.6; }
+.before-after { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }
+.ba-col { border-radius: 12px; padding: 18px; }
+.ba-col.before { background: #FEF2F2; border: 1px solid #FECACA; }
+.ba-col.after { background: #F0FDF4; border: 1px solid #BBF7D0; }
+.ba-label { font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
+.ba-col.before .ba-label { color: var(--red); }
+.ba-col.after .ba-label { color: #15803D; }
+.ba-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.ba-list li { font-size: 12px; color: var(--sub); display: flex; gap: 6px; align-items: flex-start; font-weight: 600; }
+.ba-list li::before { content: '•'; flex-shrink: 0; margin-top: 1px; }
+.ba-col.before .ba-list li::before { color: var(--red); }
+.ba-col.after .ba-list li::before { color: #16A34A; }
 
-  /* QUOTE */
-  .quote { background: hsl(229 35% 16%); color: white; border-radius: 10px; padding: 0.85rem 1.1rem; font-size: 0.9rem; font-style: italic; line-height: 1.5; }
-  .quote::before { content: '"'; font-size: 2rem; line-height: 0; vertical-align: -0.5em; opacity: 0.4; margin-right: 0.2rem; }
-  .quote-attr { font-size: 0.72rem; color: hsl(216 30% 70%); font-style: normal; margin-top: 0.4rem; font-weight: 600; }
+/* ── CASH TABLE ── */
+.cash-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-radius: 8px; margin-bottom: 8px; }
+.cash-row.header-row { background: var(--celeste); color: white; font-weight: 800; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; }
+.cash-row.data-row { background: var(--card); border: 1px solid var(--border); font-size: 13px; font-weight: 600; color: var(--text); }
+.cash-row.total-row { background: #EFF9FF; border: 2px solid var(--celeste); font-size: 14px; font-weight: 800; color: var(--celeste2); }
 
-  /* SLIDE HEADER */
-  .slide-header { display: flex; align-items: flex-start; justify-content: space-between; }
-  .slide-title-block { display: flex; flex-direction: column; gap: 0.25rem; }
-  .slide-tag { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--celeste); }
-  .urgent-banner { background: hsl(162 60% 92%); color: var(--green-text); border: 1px solid hsl(162 60% 78%); border-radius: 8px; padding: 0.4rem 0.9rem; font-size: 0.78rem; font-weight: 700; white-space: nowrap; align-self: flex-start; }
+/* ── PRICING DARK ── */
+.price-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+.price-card { border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 22px; }
+.price-card .pc-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 10px; }
+.price-card .pc-value { font-size: 32px; font-weight: 900; color: var(--celeste); }
+.price-card .pc-unit { font-size: 12px; color: rgba(255,255,255,0.5); font-weight: 600; margin-top: 4px; }
+.price-card .pc-desc { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 10px; line-height: 1.5; }
+.price-card.main { border-color: var(--celeste); background: rgba(0,178,227,0.08); }
+.include-list { display: flex; flex-direction: column; gap: 8px; }
+.include-item { display: flex; gap: 10px; align-items: center; font-size: 13px; color: rgba(255,255,255,0.75); font-weight: 500; }
+.include-item .check { color: var(--verde); font-size: 14px; font-weight: 800; }
 
-  /* SECTION LABEL */
-  .section-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); padding-top: 0.5rem; margin-top: 0.25rem; border-top: 1px solid var(--border); }
+/* ── ROI ── */
+.roi-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+.roi-col { border-radius: 14px; padding: 20px; }
+.roi-col.hoy { background: #1E0A0A; border: 1px solid rgba(239,68,68,0.3); }
+.roi-col.picker { background: #061E12; border: 1px solid rgba(0,222,155,0.3); }
+.roi-col-label { font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 14px; }
+.roi-col.hoy .roi-col-label { color: #F87171; }
+.roi-col.picker .roi-col-label { color: var(--verde); }
+.roi-line { display: flex; justify-content: space-between; font-size: 13px; color: rgba(255,255,255,0.6); font-weight: 500; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.roi-line strong { color: rgba(255,255,255,0.9); font-weight: 700; }
+.roi-line.total { border-bottom: none; border-top: 1px solid rgba(255,255,255,0.15); margin-top: 4px; padding-top: 10px; }
+.roi-col.hoy .roi-line.total strong { color: #F87171; font-size: 16px; }
+.roi-col.picker .roi-line.total strong { color: var(--verde); font-size: 16px; }
+.roi-banner { background: linear-gradient(135deg, var(--celeste), var(--verde)); border-radius: 14px; padding: 22px; text-align: center; }
+.roi-banner .rb-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.8); margin-bottom: 6px; }
+.roi-banner .rb-value { font-size: 42px; font-weight: 900; color: white; line-height: 1; }
+.roi-banner .rb-desc { font-size: 13px; color: rgba(255,255,255,0.85); margin-top: 6px; font-weight: 600; }
+.estimado-note { font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 10px; text-align: center; font-style: italic; }
 
-  /* SCROLLBAR */
-  ::-webkit-scrollbar { width: 5px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+/* ── SOCIAL PROOF ── */
+.proof-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 16px; }
+.proof-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+.proof-card .pc-country { font-size: 10px; color: var(--muted); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+.proof-card .pc-name { font-size: 15px; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+.proof-card .pc-stat { font-size: 12px; color: var(--sub); font-weight: 600; }
+.proof-card .pc-stat span { color: var(--celeste); font-weight: 800; }
 
-  .text-green { color: var(--green-text); }
-  .text-amber { color: hsl(43 100% 30%); }
-  .text-red { color: var(--red); }
+/* ── NEXT STEPS DARK ── */
+.steps-list { display: flex; flex-direction: column; gap: 14px; margin-bottom: 24px; }
+.step-item { display: flex; gap: 16px; align-items: flex-start; }
+.step-num { width: 32px; height: 32px; border-radius: 50%; background: var(--celeste); color: white; font-size: 14px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+.step-content .st-title { font-size: 15px; font-weight: 700; color: white; margin-bottom: 3px; }
+.step-content .st-desc { font-size: 12px; color: rgba(255,255,255,0.55); line-height: 1.5; }
+.guarantee-box { background: rgba(0,222,155,0.08); border: 1px solid rgba(0,222,155,0.25); border-radius: 12px; padding: 16px 20px; text-align: center; }
+.guarantee-box .gb-title { font-size: 14px; font-weight: 800; color: var(--verde); margin-bottom: 4px; }
+.guarantee-box .gb-desc { font-size: 12px; color: rgba(255,255,255,0.6); line-height: 1.5; }
 </style>
 </head>
 <body>
 
+<!-- NAV -->
 <nav>
-  <div class="nav-brand">PICKER × ENCEBOLLADOS CDL</div>
-  <div class="nav-tabs">
-    <button class="nav-tab active" onclick="goTo(0)">Estado</button>
-    <button class="nav-tab" onclick="goTo(1)">Empresa</button>
-    <button class="nav-tab" onclick="goTo(2)">Historia</button>
-    <button class="nav-tab" onclick="goTo(3)">Pain</button>
-    <button class="nav-tab" onclick="goTo(4)">Playbook</button>
-    <button class="nav-tab" onclick="goTo(5)">MEDDPICC</button>
-    <button class="nav-tab" onclick="goTo(6)">Demo S2</button>
-    <button class="nav-tab" onclick="goTo(7)">Financiero</button>
-  </div>
-  <div class="nav-arrows">
-    <button onclick="prev()">&#8592;</button>
-    <span class="slide-counter" id="counter">1 / 8</span>
-    <button onclick="next()">&#8594;</button>
-  </div>
+  <span class="logo">PICKER</span>
+  <button onclick="go(0)" id="tab0" class="active">Inicio</button>
+  <button onclick="go(1)" id="tab1">Lo que sabemos</button>
+  <button onclick="go(2)" id="tab2">Diagnóstico</button>
+  <button onclick="go(3)" id="tab3">Solución</button>
+  <button onclick="go(4)" id="tab4">Beneficio 1</button>
+  <button onclick="go(5)" id="tab5">Beneficio 2</button>
+  <button onclick="go(6)" id="tab6">Beneficio 3</button>
+  <button onclick="go(7)" id="tab7">Pricing</button>
+  <button onclick="go(8)" id="tab8">Impacto</button>
+  <button onclick="go(9)" id="tab9">Clientes</button>
+  <button onclick="go(10)" id="tab10">Siguientes pasos</button>
 </nav>
 
-<div class="slides-wrapper">
+<div class="slides-wrap">
 
-  <!-- ══════════════════════════════════════
-       SLIDE 1 — ESTADO
-  ══════════════════════════════════════ -->
-  <div class="slide active">
-    <div class="slide-header">
-      <div class="slide-title-block">
-        <span class="slide-tag">Deal Status · 8 jul 2026</span>
-        <h1>Encebollados CDL<br/><span style="color:var(--celeste)">Sesión 2 — Demo pendiente</span></h1>
+<!-- ─── SLIDE 0: COVER ─── -->
+<div class="slide cover-slide active" id="slide0">
+  <div class="inner">
+    <div class="cover-tag">Propuesta Comercial · Julio 2026</div>
+    <div class="cover-title">Delivery automatizado<br/>para <span>Encebollados CDL</span></div>
+    <div class="cover-sub">Cómo pasar de 2 personas contestando WhatsApp<br/>a un sistema automático que despacha, rastrea y cobra por ti.</div>
+    <div class="cover-meta">
+      <div class="cover-meta-item">
+        <span class="label">Locales</span>
+        <span class="value">5 en Guayaquil</span>
       </div>
-      <div class="urgent-banner">✅ Referido Qik · Víctor decide solo</div>
-    </div>
-
-    <div class="card-grid grid-4">
-      <div class="stat-chip">
-        <span class="value">2,000</span>
+      <div class="cover-meta-item">
         <span class="label">Envíos / mes</span>
-        <span class="desc">Canal propio · fuera de plataformas</span>
+        <span class="value">~2,000</span>
       </div>
-      <div class="stat-chip">
-        <span class="value amber">$10</span>
-        <span class="label">Ticket promedio (USD)</span>
-        <span class="desc">50% efectivo · 40% transf · 10% link</span>
+      <div class="cover-meta-item">
+        <span class="label">Canal</span>
+        <span class="value">Canal propio (sin plataformas)</span>
       </div>
-      <div class="stat-chip">
-        <span class="value red">100%</span>
-        <span class="label">Manual hoy</span>
-        <span class="desc">WhatsApp · sin tracking · sin SLA</span>
-      </div>
-      <div class="stat-chip">
-        <span class="value">5</span>
-        <span class="label">Locales Guayaquil</span>
-        <span class="desc">4 norte GYQ + 1 Vía Salitre</span>
+      <div class="cover-meta-item">
+        <span class="label">Partner</span>
+        <span class="value">Qik · Ricardo Mancero</span>
       </div>
     </div>
+  </div>
+</div>
 
-    <div class="card-grid grid-2">
-      <div class="card">
-        <h3>Contactos</h3>
-        <table>
-          <thead><tr><th>Nombre</th><th>Cargo</th><th>Rol en deal</th></tr></thead>
-          <tbody>
-            <tr>
-              <td><strong>Víctor Dueñas</strong></td>
-              <td>Dueño / Gerente General</td>
-              <td><span class="badge badge-green">Economic Buyer ✅</span></td>
-            </tr>
-            <tr>
-              <td><strong>Ricardo Mancero</strong></td>
-              <td>Partner Qik</td>
-              <td><span class="badge badge-blue">Champion · referidor</span></td>
-            </tr>
-          </tbody>
-        </table>
-        <p style="margin-top:0.5rem; font-size:0.78rem; color:var(--muted)">Origen: referido directo de Ricardo Mancero (Qik). Mancero coordina agenda y relación con Víctor.</p>
+<!-- ─── SLIDE 1: LO QUE SABEMOS ─── -->
+<div class="slide slide-light" id="slide1">
+  <div class="inner">
+    <div class="slide-tag">Datos confirmados</div>
+    <div class="slide-title">Lo que sabemos de tu operación</div>
+    <div class="slide-sub">Datos levantados en sesión del 6 de julio de 2026</div>
+    <div class="stat-grid">
+      <div class="stat-card accent">
+        <div class="stat-label">Envíos / mes</div>
+        <div class="stat-value">2,000</div>
+        <div class="stat-unit">canal propio · sin plataformas</div>
       </div>
-      <div class="card">
-        <h3>Etapa del deal</h3>
-        <div style="display:flex; flex-direction:column; gap:0.4rem; margin-top:0.25rem;">
-          <div style="display:flex; align-items:center; gap:0.5rem;">
-            <span style="color:var(--green-text); font-size:1rem;">✓</span>
-            <span style="font-size:0.875rem; color:var(--sub)">Sesión 1 — 6 jul 2026 · Pain confirmado, objeción resuelta</span>
-          </div>
-          <div style="display:flex; align-items:center; gap:0.5rem;">
-            <span style="color:var(--celeste); font-size:1rem;">→</span>
-            <span style="font-size:0.875rem; font-weight:700; color:var(--text)">Sesión 2 — Demo · pendiente de agendar</span>
-          </div>
-          <div style="display:flex; align-items:center; gap:0.5rem;">
-            <span style="color:var(--muted); font-size:1rem;">○</span>
-            <span style="font-size:0.875rem; color:var(--muted)">Propuesta de piloto · post-demo</span>
-          </div>
-          <div style="display:flex; align-items:center; gap:0.5rem;">
-            <span style="color:var(--muted); font-size:1rem;">○</span>
-            <span style="font-size:0.875rem; color:var(--muted)">Piloto 1 local · 2 semanas</span>
-          </div>
-        </div>
+      <div class="stat-card">
+        <div class="stat-label">Ticket promedio</div>
+        <div class="stat-value">$10</div>
+        <div class="stat-unit">USD por pedido</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Locales activos</div>
+        <div class="stat-value">5</div>
+        <div class="stat-unit">4 norte GYE · 1 Vía Salitre</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Distancia promedio</div>
+        <div class="stat-value">0–2 km</div>
+        <div class="stat-unit">~25 min entrega entre semana</div>
       </div>
     </div>
-
-    <div class="card-grid grid-2">
-      <div class="quote">
-        Si es factible, práctico y conveniente, adelante. Me hice incrédulo y práctico — se prueba, si funciona, listo.
-        <div class="quote-attr">— Víctor Dueñas · Sesión 1 · 6 jul 2026</div>
+    <div class="info-grid">
+      <div class="info-row">
+        <span class="ir-label">Mix de cobro</span>
+        <span class="ir-value">50% efectivo · 40% transferencia · 10% link de pago</span>
       </div>
-      <div class="card">
-        <h3>Producto aplicable</h3>
-        <div class="pill-list">
-          <span class="pill">Orquestador Uber + Rappi EC</span>
-          <span class="pill">Cash module (50% efectivo)</span>
-          <span class="pill">Tracking branded + WhatsApp</span>
-          <span class="pill">Integración Qik</span>
+      <div class="info-row">
+        <span class="ir-label">Flota</span>
+        <span class="ir-value">100% externa · empresa de motorizados tercerizada</span>
+      </div>
+      <div class="info-row">
+        <span class="ir-label">Canal de pedidos</span>
+        <span class="ir-value">100% WhatsApp · gestionado por 2 personas manualmente</span>
+      </div>
+      <div class="info-row">
+        <span class="ir-label">Integración digital</span>
+        <span class="ir-value">Sin sitio web ni app · menú por link desde redes sociales</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── SLIDE 2: DIAGNÓSTICO ─── -->
+<div class="slide slide-light" id="slide2">
+  <div class="inner">
+    <div class="slide-tag">Diagnóstico</div>
+    <div class="slide-title">Dos frenos que limitan tu crecimiento</div>
+    <div class="slide-sub">Identificados en base a lo que nos compartiste</div>
+    <div class="pain-list">
+      <div class="pain-item">
+        <div class="pain-num">Freno #1</div>
+        <div class="pain-title">Operación 100% manual — 2 personas atrapadas en WhatsApp</div>
+        <div class="pain-desc">Hoy recibir un pedido requiere que alguien lo lea, lo procese y coordine al motorizado por WhatsApp. Eso limita tu velocidad, no escala con el volumen y deja a tu equipo sin tiempo para otras cosas. Cada pedido depende de que alguien esté disponible.</div>
+        <div class="pain-data">
+          <span class="pain-chip">2 personas · jornada completa</span>
+          <span class="pain-chip">Costo estimado: $960/mes (salario mínimo EC 2026)</span>
+          <span class="pain-chip">Sin continuidad si alguien falta</span>
         </div>
-        <div style="margin-top:0.75rem;">
-          <p style="font-size:0.78rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:0.3rem;">No aplica</p>
-          <div class="pill-list">
-            <span class="pill red">My Fleet — sin riders propios</span>
-            <span class="pill red">Shield — ticket $10</span>
-            <span class="pill red">Datáfono delivery</span>
-          </div>
+      </div>
+      <div class="pain-item amber">
+        <div class="pain-num">Freno #2</div>
+        <div class="pain-title">Sin trazabilidad — ni tú ni tu cliente saben dónde va el pedido</div>
+        <div class="pain-desc">El motorizado a veces contesta WhatsApp, a veces no. El cliente tampoco tiene seguimiento en tiempo real. Eso genera llamadas de soporte, reclamos y una experiencia inconsistente que afecta la recompra.</div>
+        <div class="pain-data">
+          <span class="pain-chip amber-chip">Motorizado sin tracking en vivo</span>
+          <span class="pain-chip amber-chip">Cliente sin notificaciones automáticas</span>
+          <span class="pain-chip amber-chip">Soporte gestionado manualmente</span>
         </div>
       </div>
     </div>
   </div>
+</div>
 
-
-  <!-- ══════════════════════════════════════
-       SLIDE 2 — EMPRESA
-  ══════════════════════════════════════ -->
-  <div class="slide">
-    <div class="slide-header">
-      <div class="slide-title-block">
-        <span class="slide-tag">Research · Empresa</span>
-        <h1>Encebollados CDL</h1>
+<!-- ─── SLIDE 3: SOLUCIÓN ─── -->
+<div class="slide slide-light" id="slide3">
+  <div class="inner">
+    <div class="slide-tag">La solución</div>
+    <div class="slide-title">Un solo sistema · todo automatizado</div>
+    <div class="slide-sub">Qik gestiona el pedido. Picker despacha el motorizado. Sin intermediarios adicionales.</div>
+    <div class="sol-flow">
+      <div class="sol-box">
+        <div class="sb-icon">📱</div>
+        <div class="sb-name">Tu cliente</div>
+        <div class="sb-desc">Pide desde el menú digital Qik</div>
       </div>
-      <span class="badge badge-blue">Ecuador · Restaurantes · Guayaquil</span>
-    </div>
-
-    <div class="card-grid grid-3">
-      <div class="card">
-        <h3>Escala</h3>
-        <table>
-          <tr><td><strong>Locales</strong></td><td>5 propios</td></tr>
-          <tr><td><strong>Ubicación</strong></td><td>4 norte GYQ + 1 Vía Salitre</td></tr>
-          <tr><td><strong>Envíos / mes</strong></td><td style="font-weight:800; color:var(--celeste)">~2,000</td></tr>
-          <tr><td><strong>Distancia promedio</strong></td><td>0–2 km</td></tr>
-          <tr><td><strong>Tiempo entrega</strong></td><td>~25 min (sin SLA formal)</td></tr>
-          <tr><td><strong>País</strong></td><td>Ecuador · Guayaquil</td></tr>
-        </table>
+      <div class="sol-arrow">→</div>
+      <div class="sol-box highlight">
+        <div class="sb-icon">⚡</div>
+        <div class="sb-name">Qik + Picker</div>
+        <div class="sb-desc">Pedido entra → motorizado asignado automático</div>
       </div>
-      <div class="card">
-        <h3>Canal de venta</h3>
-        <table>
-          <tr><td><strong>Canal principal</strong></td><td>WhatsApp (link desde redes sociales)</td></tr>
-          <tr><td><strong>Plataformas</strong></td><td>No — canal 100% propio</td></tr>
-          <tr><td><strong>Gestión pedidos</strong></td><td style="color:var(--red)">2 personas en WhatsApp todo el día</td></tr>
-          <tr><td><strong>Software logístico</strong></td><td style="color:var(--red)">Ninguno</td></tr>
-          <tr><td><strong>Tracking al cliente</strong></td><td style="color:var(--red)">No existe</td></tr>
-          <tr><td><strong>Franquicia</strong></td><td>En proceso de estandarización</td></tr>
-        </table>
+      <div class="sol-arrow">→</div>
+      <div class="sol-box">
+        <div class="sb-icon">🛵</div>
+        <div class="sb-name">Uber / Rappi</div>
+        <div class="sb-desc">El más cercano disponible en GYE</div>
       </div>
-      <div class="card">
-        <h3>Medios de cobro</h3>
-        <div style="display:flex; flex-direction:column; gap:0.5rem; margin-top:0.25rem;">
-          <div>
-            <div style="display:flex; justify-content:space-between; font-size:0.875rem; margin-bottom:0.2rem;">
-              <span>💵 Efectivo contraentrega</span><strong>50%</strong>
-            </div>
-            <div style="background:var(--bg); border-radius:4px; height:7px; overflow:hidden;">
-              <div style="width:50%; background:var(--celeste); height:100%; border-radius:4px;"></div>
-            </div>
-          </div>
-          <div>
-            <div style="display:flex; justify-content:space-between; font-size:0.875rem; margin-bottom:0.2rem;">
-              <span>🏦 Transferencia bancaria</span><strong>40%</strong>
-            </div>
-            <div style="background:var(--bg); border-radius:4px; height:7px; overflow:hidden;">
-              <div style="width:40%; background:var(--amber); height:100%; border-radius:4px;"></div>
-            </div>
-          </div>
-          <div>
-            <div style="display:flex; justify-content:space-between; font-size:0.875rem; margin-bottom:0.2rem;">
-              <span>🔗 Link de pago</span><strong>10%</strong>
-            </div>
-            <div style="background:var(--bg); border-radius:4px; height:7px; overflow:hidden;">
-              <div style="width:10%; background:var(--green-text); height:100%; border-radius:4px;"></div>
-            </div>
-          </div>
-          <p style="font-size:0.78rem; color:var(--muted); margin-top:0.2rem;">Sin datáfono en delivery. 50% en efectivo = pain crítico de trazabilidad.</p>
-        </div>
+      <div class="sol-arrow">→</div>
+      <div class="sol-box">
+        <div class="sb-icon">✅</div>
+        <div class="sb-name">Entrega + tracking</div>
+        <div class="sb-desc">Cliente recibe link WhatsApp en tiempo real</div>
       </div>
     </div>
+    <div class="sol-note">
+      <strong>1 solo actor.</strong> No como en 2021 (Spunity + Payments + Picker = 3 actores, 3 cobros, 3 soporte).<br/>
+      Hoy es Picker quien coordina todo: tecnología, motorizado, tracking, efectivo y soporte.
+    </div>
+  </div>
+</div>
 
-    <div class="card-grid grid-2">
-      <div class="card">
-        <h3>Flota de entrega</h3>
-        <table>
-          <tr><td><strong>Modelo</strong></td><td>100% externa — empresa de motorizados tercerizada</td></tr>
-          <tr><td><strong>Riders propios</strong></td><td style="color:var(--red)">Ninguno</td></tr>
-          <tr><td><strong>Costo por envío</strong></td><td><span class="badge badge-amber">❌ Pendiente confirmar en S2</span></td></tr>
-          <tr><td><strong>Contrato vigente</strong></td><td><span class="badge badge-amber">❌ Pendiente confirmar en S2</span></td></tr>
-          <tr><td><strong>Carriers EC disponibles</strong></td><td>Uber · Rappi Ecuador (Guayaquil activos)</td></tr>
-        </table>
+<!-- ─── SLIDE 4: BENEFICIO 1 ─── -->
+<div class="slide slide-light" id="slide4">
+  <div class="inner">
+    <div class="benefit-header">
+      <div class="benefit-num">1</div>
+      <div class="benefit-title">Operación 100% automatizada</div>
+    </div>
+    <div class="before-after">
+      <div class="ba-col before">
+        <div class="ba-label">Hoy</div>
+        <ul class="ba-list">
+          <li>Cliente escribe al WhatsApp</li>
+          <li>Persona lee y procesa el pedido</li>
+          <li>Coordina motorizado por WhatsApp</li>
+          <li>Sin confirmación automática al cliente</li>
+          <li>2 personas · jornada completa · $960/mes</li>
+          <li>Se cae si alguien falta</li>
+        </ul>
       </div>
-      <div class="card">
-        <h3>Contexto comercial</h3>
-        <table>
-          <tr><td><strong>Ticket promedio</strong></td><td>$10 USD</td></tr>
-          <tr><td><strong>Cargo al cliente por envío</strong></td><td><span class="badge badge-amber">❌ Pendiente confirmar</span></td></tr>
-          <tr><td><strong>Equipo operativo</strong></td><td>2 personas dedicadas a WhatsApp</td></tr>
-          <tr><td><strong>Marketing</strong></td><td>Equipo activo desde hace ~1.5 meses</td></tr>
-          <tr><td><strong>Contexto Qik</strong></td><td>Ricardo Mancero — integración Qik+Picker lista</td></tr>
-        </table>
+      <div class="ba-col after">
+        <div class="ba-label">Con Qik + Picker</div>
+        <ul class="ba-list">
+          <li>Cliente pide en el menú digital Qik</li>
+          <li>Picker asigna motorizado automáticamente</li>
+          <li>Sin intervención humana en el despacho</li>
+          <li>Confirmación inmediata al cliente</li>
+          <li>Tu equipo se libera para otras tareas</li>
+          <li>Opera las 24h sin depender de quién esté</li>
+        </ul>
+      </div>
+    </div>
+    <div class="benefit-cards">
+      <div class="benefit-card">
+        <div class="bc-icon">⏱️</div>
+        <div class="bc-title">Tiempo de despacho</div>
+        <div class="bc-desc">De minutos manuales a segundos automáticos. El motorizado se asigna en el momento que entra el pedido.</div>
+      </div>
+      <div class="benefit-card">
+        <div class="bc-icon">📈</div>
+        <div class="bc-title">Escala sin contratar</div>
+        <div class="bc-desc">Puedes crecer de 2,000 a 5,000 envíos sin agregar personas al equipo de despacho.</div>
       </div>
     </div>
   </div>
+</div>
 
-
-  <!-- ══════════════════════════════════════
-       SLIDE 3 — HISTORIA
-  ══════════════════════════════════════ -->
-  <div class="slide">
-    <div class="slide-header">
-      <div class="slide-title-block">
-        <span class="slide-tag">Contexto · Historia previa con Picker</span>
-        <h1>La experiencia de 2021<br/><span style="color:var(--red)">y por qué ahora es diferente</span></h1>
-      </div>
-      <span class="badge badge-red">Objeción crítica — leer antes de la demo</span>
+<!-- ─── SLIDE 5: BENEFICIO 2 ─── -->
+<div class="slide slide-light" id="slide5">
+  <div class="inner">
+    <div class="benefit-header">
+      <div class="benefit-num">2</div>
+      <div class="benefit-title">Visibilidad total para tu cliente</div>
     </div>
-
-    <div class="card" style="border-left:3px solid var(--red);">
-      <h3>Qué pasó en 2021 — el elefante en la sala</h3>
-      <div style="display:flex; flex-direction:column; gap:0.6rem; margin-top:0.25rem;">
-        <div class="pain-block">
-          <p><strong>Modelo multi-vendor:</strong> Spunity (ecommerce) + Payments (pasarela) + Picker (logística) — tres actores, tres facturas, tres cuotas fijas y comisiones.</p>
-        </div>
-        <div class="pain-block">
-          <p><strong>Motorizados (Uber):</strong> no llegaban de manera confiable. Tracking inconsistente. Experiencia del cliente mala.</p>
-        </div>
-        <div class="pain-block">
-          <p><strong>Resultado:</strong> Víctor cerró el canal digital completamente. Volvió a WhatsApp manual. Sigue pagando $7/mes al banco sin saberlo (fee olvidado de esa época).</p>
-        </div>
-        <div class="amber-block">
-          <p><strong>Perfil que genera esto:</strong> "Me hice incrédulo y práctico." Víctor no rechaza la tecnología — rechaza la complejidad y los actores múltiples. Si se simplifica, está abierto.</p>
-        </div>
+    <div class="before-after">
+      <div class="ba-col before">
+        <div class="ba-label">Hoy</div>
+        <ul class="ba-list">
+          <li>Cliente pregunta por WhatsApp dónde va su pedido</li>
+          <li>Tu equipo contesta manualmente</li>
+          <li>Motorizado no siempre contesta</li>
+          <li>Sin confirmación de entrega</li>
+          <li>Reclamos gestionados uno a uno</li>
+        </ul>
       </div>
-    </div>
-
-    <div class="card-grid grid-2">
-      <div class="card" style="border-left:3px solid var(--green-text);">
-        <h3>Objeción resuelta en Sesión 1</h3>
-        <div style="margin-top:0.25rem;">
-          <div style="background:var(--red-bg); border-radius:8px; padding:0.65rem 0.85rem; margin-bottom:0.75rem;">
-            <p style="font-size:0.875rem; color:var(--red); font-weight:700;">Pregunta de Víctor: "¿Cuántos actores hay para que esto funcione?"</p>
-          </div>
-          <div style="background:var(--green-bg); border-radius:8px; padding:0.65rem 0.85rem;">
-            <p style="font-size:0.875rem; color:var(--green-text); font-weight:700;">Respuesta dada: "Solo Picker. Un solo actor, un solo interlocutor, una sola factura."</p>
-          </div>
-          <p style="font-size:0.8rem; color:var(--sub); margin-top:0.65rem;">Esta respuesta fue la que desbloqueó la conversación y llevó al acuerdo de hacer la demo.</p>
-        </div>
-      </div>
-      <div class="card">
-        <h3>Por qué ahora es diferente — argumentos para S2</h3>
-        <div style="display:flex; flex-direction:column; gap:0.5rem; margin-top:0.25rem;">
-          <div style="display:flex; gap:0.5rem; font-size:0.875rem;">
-            <span style="color:var(--green-text); flex-shrink:0; font-weight:800;">1.</span>
-            <span><strong>Un solo actor.</strong> Picker es el dueño de todo el flujo — no hay Spunity, no hay Payments. Una sola relación.</span>
-          </div>
-          <div style="display:flex; gap:0.5rem; font-size:0.875rem;">
-            <span style="color:var(--green-text); flex-shrink:0; font-weight:800;">2.</span>
-            <span><strong>Sin cuotas fijas.</strong> Pagas solo por envío realizado. Si no hay envíos, no hay costo.</span>
-          </div>
-          <div style="display:flex; gap:0.5rem; font-size:0.875rem;">
-            <span style="color:var(--green-text); flex-shrink:0; font-weight:800;">3.</span>
-            <span><strong>Orquestador Uber + Rappi EC.</strong> Si Uber no tiene motorizado, Rappi entra automáticamente. No depende de uno solo.</span>
-          </div>
-          <div style="display:flex; gap:0.5rem; font-size:0.875rem;">
-            <span style="color:var(--green-text); flex-shrink:0; font-weight:800;">4.</span>
-            <span><strong>Piloto sin compromiso.</strong> 1 local, 2 semanas. Si no funciona, no hay penalidad ni costo adicional.</span>
-          </div>
-          <div style="display:flex; gap:0.5rem; font-size:0.875rem;">
-            <span style="color:var(--green-text); flex-shrink:0; font-weight:800;">5.</span>
-            <span><strong>Integración Qik ya existe.</strong> Ricardo Mancero es el champion — ya conoce el producto y avala la solución.</span>
-          </div>
-        </div>
+      <div class="ba-col after">
+        <div class="ba-label">Con Picker</div>
+        <ul class="ba-list">
+          <li>Cliente recibe link de tracking por WhatsApp al instante</li>
+          <li>Ve al motorizado en tiempo real en el mapa</li>
+          <li>Notificaciones automáticas en cada estado</li>
+          <li>Confirmación de entrega automática</li>
+          <li>Soporte de incidencias lo maneja Picker</li>
+        </ul>
       </div>
     </div>
-
-    <div class="card" style="background:hsl(43 100% 97%); border-color:hsl(43 100% 80%);">
-      <h3>Cómo manejar el tema en S2 — no ignorarlo, usarlo</h3>
-      <p style="font-size:0.875rem; color:var(--sub); margin-top:0.25rem; line-height:1.6;">Abrir la demo recordando S1: <em style="color:var(--text); font-style:normal; font-weight:600;">"Víctor, en la sesión anterior resolviste tu principal duda: somos solo nosotros. Hoy te mostramos exactamente cómo funciona con tu operación. Y al final, haces un envío tú mismo."</em> — Esto convierte la objeción en un punto de avance, no en una amenaza.</p>
-    </div>
-  </div>
-
-
-  <!-- ══════════════════════════════════════
-       SLIDE 4 — PAIN
-  ══════════════════════════════════════ -->
-  <div class="slide">
-    <div class="slide-header">
-      <div class="slide-title-block">
-        <span class="slide-tag">Pain · Confirmado en Sesión 1 · 6 jul 2026</span>
-        <h1>El problema<br/><span style="color:var(--red)">de operar 100% manual</span></h1>
+    <div class="benefit-cards">
+      <div class="benefit-card">
+        <div class="bc-icon">📲</div>
+        <div class="bc-title">WhatsApp notifications incluido</div>
+        <div class="bc-desc">Sin costo adicional por mensaje. Cada estado del pedido llega automáticamente al cliente final.</div>
       </div>
-      <span class="badge badge-red">Pain confirmado ✓</span>
-    </div>
-
-    <div class="card" style="border-left:3px solid var(--red);">
-      <h3>Pain principal — operación ciega</h3>
-      <div style="display:flex; flex-direction:column; gap:0.6rem;">
-        <div class="pain-block">
-          <p><strong>2 personas gestionando WhatsApp todo el día</strong> — reciben el pedido, coordina con el motorizado, le avisan al cliente. Sin sistema, sin automatización.</p>
-        </div>
-        <div class="pain-block">
-          <p><strong>Sin tracking al cliente final</strong> — el cliente no sabe dónde está su pedido. Víctor tampoco. Si el motorizado no contesta WhatsApp, el pedido queda en el aire.</p>
-        </div>
-        <div class="pain-block">
-          <p><strong>Sin métricas de fulfillment</strong> — no saben cuántos pedidos se entregan a tiempo, cuántos se pierden, cuál local tiene más problemas.</p>
-        </div>
-        <div class="pain-block">
-          <p><strong>Sin SLA formal</strong> — prometen ~25 min pero no hay forma de medirlo ni de responsabilizar al motorizado.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="card-grid grid-2">
-      <div class="card">
-        <h3>Pain secundario — efectivo sin trazabilidad</h3>
-        <div style="display:flex; flex-direction:column; gap:0.4rem; margin-top:0.25rem;">
-          <div class="pain-block">
-            <p><strong>50% de los pedidos son en efectivo.</strong> El motorizado cobra, pero no hay registro automático.</p>
-          </div>
-          <p style="font-size:0.875rem; color:var(--sub)">Con 2,000 env/mes: ~1,000 pedidos/mes en efectivo coordinados por WhatsApp. Cualquier discrepancia es imposible de rastrear.</p>
-          <p style="font-size:0.875rem; color:var(--sub)">El Cash module de Picker resuelve esto directamente: motorizado registra cobro → panel en tiempo real → depósito semanal a cuenta de Víctor.</p>
-          <span class="badge badge-green" style="margin-top:0.25rem;">Esto es el argumento #2 de la demo</span>
-        </div>
-      </div>
-      <div class="card">
-        <h3>Pain de escala bloqueada</h3>
-        <div style="display:flex; flex-direction:column; gap:0.4rem; margin-top:0.25rem;">
-          <div class="amber-block">
-            <p>Víctor está estandarizando procesos para franquiciar. Con operación 100% manual y sin datos, escalar a más locales = escalar el caos.</p>
-          </div>
-          <p style="font-size:0.875rem; color:var(--sub)">Picker da el sistema de trazabilidad y datos que hacen posible replicar la operación en nuevos locales sin depender de dos personas con WhatsApp.</p>
-          <span class="badge badge-blue" style="margin-top:0.25rem;">Ángulo de visión a largo plazo — usar si Víctor menciona franquicias</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="card" style="background:hsl(193 100% 96%); border-color:hsl(193 100% 80%);">
-      <h3>Ángulo Picker para la demo</h3>
-      <div style="display:flex; flex-direction:column; gap:0.35rem;">
-        <div style="display:flex; gap:0.6rem; font-size:0.875rem;">
-          <span style="color:var(--celeste)">→</span>
-          <span><strong>Automatización total:</strong> pedido en Qik → Picker asigna motorizado automáticamente. Las 2 personas de WhatsApp quedan libres para otra cosa.</span>
-        </div>
-        <div style="display:flex; gap:0.6rem; font-size:0.875rem;">
-          <span style="color:var(--celeste)">→</span>
-          <span><strong>Cash module:</strong> cada envío en efectivo queda registrado. Picker deposita semanalmente. Sin discrepancias.</span>
-        </div>
-        <div style="display:flex; gap:0.6rem; font-size:0.875rem;">
-          <span style="color:var(--celeste)">→</span>
-          <span><strong>Tracking en tiempo real:</strong> Víctor ve el motorizado en el panel. Cliente recibe WhatsApp automático con link de seguimiento.</span>
-        </div>
-        <div style="display:flex; gap:0.6rem; font-size:0.875rem;">
-          <span style="color:var(--celeste)">→</span>
-          <span><strong>Orquestador EC:</strong> si Uber no tiene disponibilidad, Rappi entra solo. Sin que nadie lo coordine.</span>
-        </div>
+      <div class="benefit-card">
+        <div class="bc-icon">🎨</div>
+        <div class="bc-title">Tracking con tu marca</div>
+        <div class="bc-desc">El link de seguimiento lleva los colores y logo de Encebollados CDL. La experiencia parece 100% tuya.</div>
       </div>
     </div>
   </div>
+</div>
 
-
-  <!-- ══════════════════════════════════════
-       SLIDE 5 — PLAYBOOK (25 preguntas)
-  ══════════════════════════════════════ -->
-  <div class="slide">
-    <div class="slide-header">
-      <div class="slide-title-block">
-        <span class="slide-tag">Sales Playbook · Script Intro Meeting v2 · Status al 8 jul 2026</span>
-        <h1>Preguntas respondidas<br/><span style="color:var(--sub); font-size:1.1rem; font-weight:600">y pendientes para S2</span></h1>
-      </div>
-      <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
-        <span class="badge badge-green">✓ 14 respondidas</span>
-        <span class="badge badge-amber">⚠ 3 parciales</span>
-        <span class="badge badge-red">✗ 8 pendientes</span>
-      </div>
+<!-- ─── SLIDE 6: BENEFICIO 3 (CASH) ─── -->
+<div class="slide slide-light" id="slide6">
+  <div class="inner">
+    <div class="benefit-header">
+      <div class="benefit-num">3</div>
+      <div class="benefit-title">Efectivo gestionado y depositado por Picker</div>
     </div>
-
-    <div class="card-grid grid-2">
-      <!-- BLOQUE A -->
-      <div class="card">
-        <h3>Bloque A — Operación (Q1–Q13)</h3>
-        <div class="q-row">
-          <span class="q-num">Q1</span>
-          <div class="q-text">¿Canales de venta? ¿Cuáles?
-            <div class="q-answer">WhatsApp (link desde redes sociales). Canal 100% propio. Sin plataformas tipo Rappi/Uber Eats.</div>
-          </div>
-          <span class="q-status">✅</span>
-        </div>
-        <div class="q-row">
-          <span class="q-num">Q2</span>
-          <div class="q-text">¿Qué % del volumen por canal?
-            <div class="q-answer">100% WhatsApp canal propio. No hay mix de canales.</div>
-          </div>
-          <span class="q-status">✅</span>
-        </div>
-        <div class="q-row">
-          <span class="q-num">Q3</span>
-          <div class="q-text">¿Cuántas sucursales con delivery?
-            <div class="q-answer">5 locales — 4 norte Guayaquil + 1 Vía Salitre. Todos hacen delivery.</div>
-          </div>
-          <span class="q-status">✅</span>
-        </div>
-        <div class="q-row" style="background:hsl(193 100% 96%);">
-          <span class="q-num" style="color:var(--celeste);">Q4 ★</span>
-          <div class="q-text">¿Cuántos envíos/mes canal propio? ← CRÍTICO para MRR
-            <div class="q-answer">~2,000 envíos/mes totales. ~400 por local (promedio estimado — confirmar en S2).</div>
-          </div>
-          <span class="q-status">✅</span>
-        </div>
-        <div class="q-row">
-          <span class="q-num">Q5</span>
-          <div class="q-text">¿Cómo envían hoy? ¿Flota propia, externos, cuáles?
-            <div class="q-answer">100% empresa de motorizados tercerizada. Sin riders propios. Coordinación por WhatsApp.</div>
-          </div>
-          <span class="q-status">✅</span>
-        </div>
-        <div class="q-row" style="background:hsl(193 100% 96%);">
-          <span class="q-num" style="color:var(--celeste);">Q6 ★</span>
-          <div class="q-text">¿Distancia promedio? ¿% a más de 5km?
-            <div class="q-answer">0–2 km promedio. Zona norte Guayaquil. Sin envíos largos.</div>
-          </div>
-          <span class="q-status">✅</span>
-        </div>
-        <div class="q-row">
-          <span class="q-num">Q7</span>
-          <div class="q-text">¿Envíos urgentes? ¿Tiempo promesa?
-            <div class="q-answer">~25 min estimado. Sin SLA formal. Sin promesa garantizada al cliente.</div>
-          </div>
-          <span class="q-status">✅</span>
-        </div>
-        <div class="q-row">
-          <span class="q-num">Q8</span>
-          <div class="q-text">¿Envíos por ruta o transferencias entre locales?
-            <div class="q-answer">Punto A→B simple. Sin multi-parada. Sin transferencias entre locales.</div>
-          </div>
-          <span class="q-status">✅</span>
-        </div>
-        <div class="q-row">
-          <span class="q-num">Q9</span>
-          <div class="q-text">¿Plataforma/software logístico? ¿Tracking? ¿Orquestación?
-            <div class="q-answer">Ninguna. 100% manual. Sin tracking, sin notificaciones, sin orquestación.</div>
-          </div>
-          <span class="q-status">✅</span>
-        </div>
-        <div class="q-row">
-          <span class="q-num">Q10</span>
-          <div class="q-text">¿Despacho manual? ¿Reglas por repartidor?
-            <div class="q-answer">100% manual. 2 personas gestionan todo por WhatsApp todo el día.</div>
-          </div>
-          <span class="q-status">✅</span>
-        </div>
-        <div class="q-row">
-          <span class="q-num">Q11</span>
-          <div class="q-text">¿Ticket promedio?
-            <div class="q-answer">$10 USD por pedido.</div>
-          </div>
-          <span class="q-status">✅</span>
-        </div>
-        <div class="q-row">
-          <span class="q-num">Q12</span>
-          <div class="q-text">¿Medios de cobro? Mix %
-            <div class="q-answer">50% efectivo · 40% transferencia bancaria · 10% link de pago. Sin datáfono en delivery.</div>
-          </div>
-          <span class="q-status">✅</span>
-        </div>
-        <div class="q-row">
-          <span class="q-num">Q13</span>
-          <div class="q-text">¿Métricas de operación hoy?
-            <div class="q-answer">Ninguna. Sin datos de fulfillment, SLA ni tiempo real de entrega.</div>
-          </div>
-          <span class="q-status">✅</span>
-        </div>
-      </div>
-
-      <!-- BLOQUES B, C, D -->
-      <div style="display:flex; flex-direction:column; gap:0.75rem;">
-        <div class="card">
-          <h3>Bloque B — Economics (Q14–Q18)</h3>
-          <div class="q-row">
-            <span class="q-num">Q14</span>
-            <div class="q-text">¿Cuántos repartidores? ¿Nómina o externos?
-              <div class="q-answer">Empresa de motorizados externa. 0 riders propios en nómina.</div>
-            </div>
-            <span class="q-status">✅</span>
-          </div>
-          <div class="q-row" style="background:hsl(43 100% 97%);">
-            <span class="q-num" style="color:var(--amber);">Q15 ★</span>
-            <div class="q-text">¿Cuánto pagan por envío? ← CRÍTICO para BC
-              <div class="q-answer" style="color:var(--red)">No confirmado. Pendiente preguntar en S2. Clave para construir el BC.</div>
-            </div>
-            <span class="q-status">❌</span>
-          </div>
-          <div class="q-row">
-            <span class="q-num">Q16</span>
-            <div class="q-text">¿Cobran cargo al cliente final por envío?
-              <div class="q-answer" style="color:var(--red)">No explorado. Preguntar en S2.</div>
-            </div>
-            <span class="q-status">❌</span>
-          </div>
-          <div class="q-row">
-            <span class="q-num">Q17</span>
-            <div class="q-text">¿Call center u otro equipo de atención?
-              <div class="q-answer">No aplica. Todo es WhatsApp — 2 personas internas.</div>
-            </div>
-            <span class="q-status">✅</span>
-          </div>
-          <div class="q-row">
-            <span class="q-num">Q18</span>
-            <div class="q-text">¿Otros costos? (seguros, combustible, software)
-              <div class="q-answer" style="color:var(--red)">Sin datos. Explorar en S2.</div>
-            </div>
-            <span class="q-status">❌</span>
-          </div>
-        </div>
-
-        <div class="card">
-          <h3>Bloque C — Dolor y Visión (Q19–Q21)</h3>
-          <div class="q-row">
-            <span class="q-num">Q19</span>
-            <div class="q-text">¿Cuáles son los retos principales?
-              <div class="q-answer">Manual total, sin tracking, sin métricas. Desconfianza por experiencia 2021 multi-vendor.</div>
-            </div>
-            <span class="q-status">✅</span>
-          </div>
-          <div class="q-row">
-            <span class="q-num">Q20</span>
-            <div class="q-text">¿Cuáles son los 2–3 beneficios más importantes vs hoy?
-              <div class="q-answer" style="color:var(--amber)">Parcial — inferido: automatización, un actor, cash module. No preguntado explícitamente.</div>
-            </div>
-            <span class="q-status">⚠️</span>
-          </div>
-          <div class="q-row">
-            <span class="q-num">Q21</span>
-            <div class="q-text">¿Cómo se alinea con objetivos de Dirección?
-              <div class="q-answer">Víctor ES la dirección — decide solo. Objetivo personal: escalar sin complejidad.</div>
-            </div>
-            <span class="q-status">✅</span>
-          </div>
-        </div>
-
-        <div class="card">
-          <h3>Bloque D — Decisión e Integración (Q22–Q25)</h3>
-          <div class="q-row">
-            <span class="q-num">Q22</span>
-            <div class="q-text">¿Criterio de decisión más importante?
-              <div class="q-answer" style="color:var(--amber)">Parcial — inferido: simple, un actor, práctico, poder probarlo. No preguntado formalmente.</div>
-            </div>
-            <span class="q-status">⚠️</span>
-          </div>
-          <div class="q-row">
-            <span class="q-num">Q23</span>
-            <div class="q-text">¿A quién más incluir para avanzar?
-              <div class="q-answer">Nadie — Víctor decide solo. Ricardo Mancero como champion.</div>
-            </div>
-            <span class="q-status">✅</span>
-          </div>
-          <div class="q-row">
-            <span class="q-num">Q24</span>
-            <div class="q-text">¿Proceso de alta de proveedores? Tiempos e involucrados.
-              <div class="q-answer" style="color:var(--red)">No explorado. Víctor decide solo — posiblemente rápido.</div>
-            </div>
-            <span class="q-status">❌</span>
-          </div>
-          <div class="q-row">
-            <span class="q-num">Q25</span>
-            <div class="q-text">¿Integración IT interna o externa?
-              <div class="q-answer" style="color:var(--amber)">Parcial — integración Qik+Picker ya existe. Lado Picker listo. Confirmar si Víctor necesita algo de su lado.</div>
-            </div>
-            <span class="q-status">⚠️</span>
-          </div>
-        </div>
-
-        <div class="card" style="border-top:3px solid var(--amber);">
-          <h3>Bloque E — Específico Encebollados CDL</h3>
-          <div class="q-row">
-            <span class="q-num">E1</span>
-            <div class="q-text">¿Cuánto cobra hoy la empresa de motorizados por envío?
-              <div class="q-answer" style="color:var(--red)">Pendiente — clave para BC y para mostrar costo vs Picker.</div>
-            </div>
-            <span class="q-status">❌</span>
-          </div>
-          <div class="q-row">
-            <span class="q-num">E2</span>
-            <div class="q-text">¿Hay contrato vigente con empresa de motorizados?
-              <div class="q-answer" style="color:var(--red)">Pendiente — puede ser bloqueador para piloto.</div>
-            </div>
-            <span class="q-status">❌</span>
-          </div>
-          <div class="q-row">
-            <span class="q-num">E3</span>
-            <div class="q-text">¿Cuántos pedidos se pierden o quedan sin motorizado en hora pico?
-              <div class="q-answer" style="color:var(--red)">Pendiente — cuantifica el dolor de disponibilidad.</div>
-            </div>
-            <span class="q-status">❌</span>
-          </div>
-          <div class="q-row">
-            <span class="q-num">E4</span>
-            <div class="q-text">¿El volumen es parejo entre los 5 locales o hay locales más activos?
-              <div class="q-answer" style="color:var(--red)">Pendiente — afecta qué local arrancar el piloto primero.</div>
-            </div>
-            <span class="q-status">❌</span>
-          </div>
-        </div>
-      </div>
+    <div class="slide-sub" style="margin-top:-10px;margin-bottom:18px">El 50% de tus pedidos son en efectivo — hoy los rastreas manualmente.</div>
+    <div class="cash-row header-row">
+      <span>Concepto</span><span>Detalle</span><span>Valor estimado</span>
+    </div>
+    <div class="cash-row data-row">
+      <span>Envíos en efectivo / mes</span><span>50% de 2,000 envíos</span><span style="color:var(--celeste);font-weight:800">~1,000 pedidos</span>
+    </div>
+    <div class="cash-row data-row">
+      <span>Monto recaudado / mes</span><span>1,000 × $10 ticket promedio</span><span style="color:var(--celeste);font-weight:800">~$10,000 USD</span>
+    </div>
+    <div class="cash-row data-row">
+      <span>Frecuencia de depósito</span><span>Picker te deposita cada semana</span><span style="font-weight:700">Semanal a tu cuenta</span>
+    </div>
+    <div class="cash-row total-row">
+      <span>Visibilidad en plataforma</span><span colspan="2">Cada envío con cargo en efectivo queda registrado, trazado y consolidado en tu dashboard.</span>
+    </div>
+    <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:10px;padding:14px 18px;margin-top:14px;font-size:13px;color:#15803D;font-weight:600;text-align:center;">
+      No más hojas de Excel para cuadrar el efectivo. Picker lo registra y deposita automáticamente.
     </div>
   </div>
+</div>
 
-
-  <!-- ══════════════════════════════════════
-       SLIDE 6 — MEDDPICC
-  ══════════════════════════════════════ -->
-  <div class="slide">
-    <div class="slide-header">
-      <div class="slide-title-block">
-        <span class="slide-tag">MEDDPICC · Al 8 jul 2026 · Post Sesión 1</span>
-        <h1>Calificación del deal</h1>
+<!-- ─── SLIDE 7: PRICING (DARK) ─── -->
+<div class="slide slide-dark" id="slide7">
+  <div class="inner">
+    <div class="slide-tag">Estructura de precios</div>
+    <div class="slide-title">Simple. Transparente. Sin sorpresas.</div>
+    <div class="slide-sub">Un solo actor. Una sola factura. Sin cuotas fijas ocultas.</div>
+    <div class="price-grid">
+      <div class="price-card main">
+        <div class="pc-label">Fee de orquestación Picker</div>
+        <div class="pc-value">$0.35</div>
+        <div class="pc-unit">USD por envío completado</div>
+        <div class="pc-desc">Solo pagas cuando el pedido se entrega. Sin setup, sin mensualidad fija.</div>
       </div>
-      <div style="display:flex; gap:0.4rem;">
-        <span class="badge badge-green">4 confirmados</span>
-        <span class="badge badge-amber">2 emergiendo</span>
-        <span class="badge badge-red">2 desconocidos</span>
+      <div class="price-card">
+        <div class="pc-label">Tarifa del motorizado (carrier)</div>
+        <div class="pc-value">$2.35</div>
+        <div class="pc-unit">USD por envío · 0–3 km (Uber / Rappi GYE)</div>
+        <div class="pc-desc">Varía según distancia. Picker siempre elige el proveedor más barato disponible.</div>
       </div>
     </div>
-
-    <div class="card">
-      <table>
-        <thead>
-          <tr><th>Elemento</th><th>Status</th><th>Detalle</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>Metrics</strong></td>
-            <td><span class="badge badge-amber">⚠️ Parcial</span></td>
-            <td>2,000 env/mes, $10 ticket, 50% efectivo, 0–2 km, 25 min. <strong>Pendiente:</strong> costo/envío actual (Q15 ★), pedidos perdidos en pico, cargo al cliente.</td>
-          </tr>
-          <tr>
-            <td><strong>Economic Buyer</strong></td>
-            <td><span class="badge badge-green">✅ Confirmado</span></td>
-            <td>Víctor Dueñas — dueño, decide solo, sin comité. Relación directa.</td>
-          </tr>
-          <tr>
-            <td><strong>Decision Criteria</strong></td>
-            <td><span class="badge badge-amber">⚠️ Emergiendo</span></td>
-            <td>Simple, un solo actor, sin cuota fija, poder probarlo primero. No preguntado formalmente — inferido de Sesión 1.</td>
-          </tr>
-          <tr>
-            <td><strong>Decision Process</strong></td>
-            <td><span class="badge badge-green">✅ Claro</span></td>
-            <td>Víctor decide solo — el piloto es el cierre. Si la demo convence, arranca. Sin aprobaciones adicionales aparentes.</td>
-          </tr>
-          <tr>
-            <td><strong>Paper Process</strong></td>
-            <td><span class="badge badge-red">❌ Desconocido</span></td>
-            <td>No explorado. Por ser negocio familiar pequeño, posiblemente simple. Confirmar en S2.</td>
-          </tr>
-          <tr>
-            <td><strong>Pain</strong></td>
-            <td><span class="badge badge-green">✅ Confirmado</span></td>
-            <td>100% manual, sin tracking, sin SLA, 50% efectivo sin trazabilidad, 2 personas en WhatsApp. Objeción histórica (2021) resuelta.</td>
-          </tr>
-          <tr>
-            <td><strong>Champion</strong></td>
-            <td><span class="badge badge-green">✅ Fuerte</span></td>
-            <td>Ricardo Mancero (Qik) — relación directa con Víctor, avala la solución, coordina la demo. Champion externo, muy activo.</td>
-          </tr>
-          <tr>
-            <td><strong>Competition</strong></td>
-            <td><span class="badge badge-red">❌ Parcial</span></td>
-            <td>Status quo: empresa de motorizados actual (WhatsApp). Sin competidores tecnológicos identificados. Riesgo = inercia e inacción tras la objeción de 2021.</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="card-grid grid-2">
-      <div class="card" style="border-left:3px solid var(--red);">
-        <h3>Riesgo principal del deal</h3>
-        <div style="display:flex; gap:0.65rem; align-items:flex-start; font-size:0.875rem; margin-top:0.25rem;">
-          <span style="color:var(--red); font-size:1.1rem; flex-shrink:0;">⚠</span>
-          <span><strong>La experiencia de 2021.</strong> Víctor ya fue quemado. Si la demo no es fluida, si hay algún momento de complejidad o de "necesitas también a X", el deal muere. La demo tiene que ser impecable y simple. Picker solo. Sin fricción.</span>
-        </div>
-      </div>
-      <div class="card" style="border-left:3px solid var(--green-text);">
-        <h3>Mayor fortaleza del deal</h3>
-        <div style="display:flex; gap:0.65rem; align-items:flex-start; font-size:0.875rem; margin-top:0.25rem;">
-          <span style="color:var(--green-text); font-size:1.1rem; flex-shrink:0;">✓</span>
-          <span><strong>Víctor decide solo + Mancero como champion activo.</strong> Sin comité, sin proceso largo. Si la demo convence a Víctor, el piloto arranca en días. Mancero tiene credibilidad directa con él.</span>
-        </div>
-      </div>
+    <div class="include-list">
+      <div class="include-item"><span class="check">✓</span> Tracking en tiempo real con tu branding</div>
+      <div class="include-item"><span class="check">✓</span> Notificaciones WhatsApp al cliente sin costo adicional</div>
+      <div class="include-item"><span class="check">✓</span> Módulo Cash — recaudo y depósito semanal de efectivo</div>
+      <div class="include-item"><span class="check">✓</span> Soporte de incidencias con carriers incluido</div>
+      <div class="include-item"><span class="check">✓</span> Dashboard con métricas en tiempo real</div>
+      <div class="include-item"><span class="check">✓</span> Integración Qik → Picker ya activa</div>
     </div>
   </div>
+</div>
 
-
-  <!-- ══════════════════════════════════════
-       SLIDE 7 — DEMO S2
-  ══════════════════════════════════════ -->
-  <div class="slide">
-    <div class="slide-header">
-      <div class="slide-title-block">
-        <span class="slide-tag">Próxima Sesión · Sesión 2 — Demo</span>
-        <h1>Guía de Demo<br/><span style="color:var(--celeste)">flujo, preguntas, objecionario y cierre</span></h1>
+<!-- ─── SLIDE 8: IMPACTO / ROI (DARK) ─── -->
+<div class="slide slide-dark" id="slide8">
+  <div class="inner">
+    <div class="slide-tag">Impacto financiero estimado</div>
+    <div class="slide-title">Lo que cambia en tu factura logística</div>
+    <div class="slide-sub">Basado en los datos que nos compartiste y estimados de mercado en Ecuador</div>
+    <div class="roi-compare">
+      <div class="roi-col hoy">
+        <div class="roi-col-label">Hoy (estimado)</div>
+        <div class="roi-line"><span>Carrier externo (~$3.00/envío)</span><strong>$6,000/mes</strong></div>
+        <div class="roi-line"><span>Personal WhatsApp (2 × salario mínimo $480)</span><strong>$960/mes</strong></div>
+        <div class="roi-line total"><span>Total costo logístico</span><strong>$6,960/mes</strong></div>
       </div>
-      <span class="badge badge-amber">⚠ Demo debe ser impecable — sin fricción</span>
-    </div>
-
-    <div class="card" style="background:hsl(43 100% 97%); border-color:hsl(43 100% 80%);">
-      <p style="font-size:0.875rem; color:hsl(43 100% 28%); font-weight:700;">Speech de apertura: <em style="font-weight:400;">"Víctor, en la sesión anterior resolviste tu principal duda: solo somos nosotros, sin intermediarios. Hoy te vamos a mostrar exactamente cómo funciona con tu operación. Y al final, haces un envío tú mismo."</em></p>
-    </div>
-
-    <div class="card-grid grid-2">
-      <div class="card">
-        <h3>Flujo a demostrar — en este orden</h3>
-        <div style="display:flex; flex-direction:column;">
-          <div class="demo-item">
-            <div class="demo-num">1</div>
-            <div class="demo-content">
-              <strong>Qik recibe el pedido</strong>
-              <span>Cliente pide desde el menú digital Qik. Sin WhatsApp manual. Ricardo Mancero muestra este paso.</span>
-            </div>
-          </div>
-          <div class="demo-item">
-            <div class="demo-num">2</div>
-            <div class="demo-content">
-              <strong>Picker asigna automáticamente</strong>
-              <span>Picker busca Uber o Rappi más cercano en Guayaquil. Sin que nadie lo haga manualmente.</span>
-            </div>
-          </div>
-          <div class="demo-item">
-            <div class="demo-num">3</div>
-            <div class="demo-content">
-              <strong>Tracking en tiempo real</strong>
-              <span>Víctor ve el motorizado en el panel de Picker. Cliente recibe WhatsApp automático con link de seguimiento.</span>
-            </div>
-          </div>
-          <div class="demo-item">
-            <div class="demo-num">4</div>
-            <div class="demo-content">
-              <strong>Módulo Cash</strong>
-              <span>Mostrar panel: pedido en efectivo → cobrado → registrado → depósito semanal a la cuenta de Víctor.</span>
-            </div>
-          </div>
-          <div class="demo-item">
-            <div class="demo-num">5</div>
-            <div class="demo-content">
-              <strong>Envío en vivo — Víctor lo hace</strong>
-              <span>Invitar a Víctor a simularlo él mismo desde el dashboard. Este momento es el cierre.</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div style="display:flex; flex-direction:column; gap:0.75rem;">
-        <div class="card">
-          <h3>Preguntas a resolver en la sesión</h3>
-          <div style="display:flex; flex-direction:column; gap:0.35rem; margin-top:0.25rem; font-size:0.875rem;">
-            <div style="display:flex; gap:0.5rem;"><span style="color:var(--celeste); font-weight:800; flex-shrink:0;">Q1</span><span><strong>¿Cuánto cobras hoy al motorizado por envío?</strong> — base del BC</span></div>
-            <div style="display:flex; gap:0.5rem;"><span style="color:var(--celeste); font-weight:800; flex-shrink:0;">Q2</span><span>¿Tienes contrato con la empresa de motorizados actual?</span></div>
-            <div style="display:flex; gap:0.5rem;"><span style="color:var(--celeste); font-weight:800; flex-shrink:0;">Q3</span><span><strong>¿Cuántos pedidos pierdes o quedan sin motorizado en hora pico?</strong></span></div>
-            <div style="display:flex; gap:0.5rem;"><span style="color:var(--celeste); font-weight:800; flex-shrink:0;">Q4</span><span>¿Cobras algo al cliente por el envío?</span></div>
-            <div style="display:flex; gap:0.5rem;"><span style="color:var(--celeste); font-weight:800; flex-shrink:0;">Q5</span><span>El 50% de efectivo — ¿quién lo recibe hoy, cómo lo llevan al local?</span></div>
-            <div style="display:flex; gap:0.5rem;"><span style="color:var(--celeste); font-weight:800; flex-shrink:0;">Q6</span><span><strong>¿El volumen es parejo entre los 5 locales?</strong> — define dónde arrancar el piloto</span></div>
-            <div style="display:flex; gap:0.5rem;"><span style="color:var(--celeste); font-weight:800; flex-shrink:0;">Q7</span><span>¿Qué necesitas ver para sentirte cómodo arrancando el piloto?</span></div>
-          </div>
-        </div>
-
-        <div class="card" style="border-left:3px solid var(--amber);">
-          <h3>Objecionario</h3>
-          <div style="display:flex; flex-direction:column; gap:0.5rem; margin-top:0.25rem; font-size:0.875rem;">
-            <div><strong style="color:var(--text);">"Ya pasé por esto antes con ustedes"</strong><br/><span style="color:var(--sub);">→ Lo entendemos. Por eso hoy te mostramos cómo funciona antes de pedirte cualquier compromiso. Haz el envío tú mismo.</span></div>
-            <div><strong style="color:var(--text);">"¿Cuánto me cuesta?"</strong><br/><span style="color:var(--sub);">→ Pagas solo por envío realizado. Sin cuota fija. Sin mínimo de volumen.</span></div>
-            <div><strong style="color:var(--text);">"¿Y si el motorizado no llega?"</strong><br/><span style="color:var(--sub);">→ El orquestador busca en Uber Y Rappi simultáneamente. Si uno no tiene, toma el otro automáticamente.</span></div>
-            <div><strong style="color:var(--text);">"¿Qué pasa si el motorizado se lleva el efectivo?"</strong><br/><span style="color:var(--sub);">→ Todo queda registrado en el panel. Picker consolida y deposita semanalmente a tu cuenta.</span></div>
-            <div><strong style="color:var(--text);">"¿Tengo que cambiar todo?"</strong><br/><span style="color:var(--sub);">→ No. Piloto en 1 local, 2 semanas. Si funciona se escala. Sin compromiso.</span></div>
-          </div>
-        </div>
+      <div class="roi-col picker">
+        <div class="roi-col-label">Con Picker + Qik</div>
+        <div class="roi-line"><span>Carrier (Uber/Rappi ~$2.38/envío)</span><strong>$4,760/mes</strong></div>
+        <div class="roi-line"><span>Fee orquestación Picker ($0.35/envío)</span><strong>$700/mes</strong></div>
+        <div class="roi-line"><span>Personal → liberado para ventas y ops</span><strong>$0 extra</strong></div>
+        <div class="roi-line total"><span>Total costo logístico</span><strong>$5,460/mes</strong></div>
       </div>
     </div>
+    <div class="roi-banner">
+      <div class="rb-label">Ahorro estimado mensual</div>
+      <div class="rb-value">$1,500 / mes</div>
+      <div class="rb-desc">+1 persona liberada para marketing, ventas o calidad · $18,000 USD al año</div>
+    </div>
+    <div class="estimado-note">* Estimados basados en datos de mercado GYE. El costo real de tu carrier actual puede variar. Lo confirmamos juntos en la demo.</div>
+  </div>
+</div>
 
-    <div class="card-grid grid-2">
-      <div class="quote">
-        Víctor, la única manera de saber si esto funciona para ti es probándolo. Te propongo un piloto en 1 local, 2 semanas, sin compromiso. Si no te convence, no hay ningún costo adicional. ¿Arrancamos?
-        <div class="quote-attr">Speech de cierre — siempre proponer piloto en la misma sesión</div>
+<!-- ─── SLIDE 9: SOCIAL PROOF ─── -->
+<div class="slide slide-light" id="slide9">
+  <div class="inner">
+    <div class="slide-tag">Clientes que ya confían en Picker</div>
+    <div class="slide-title">Negocios similares que ya operan con nosotros</div>
+    <div class="slide-sub">Restaurantes y cadenas en 7 países de Latinoamérica</div>
+    <div class="proof-grid">
+      <div class="proof-card">
+        <div class="pc-country">🇪🇨 Ecuador</div>
+        <div class="pc-name">Dipping Cookies</div>
+        <div class="pc-stat">Canal propio · entregas automatizadas · <span>Guayaquil</span></div>
       </div>
-      <div class="card" style="border-left:3px solid var(--green-text);">
-        <h3>Checklist de salida — éxito de la sesión</h3>
-        <div style="display:flex; flex-direction:column; gap:0.4rem; margin-top:0.25rem; font-size:0.875rem;">
-          <div style="display:flex; gap:0.5rem;"><span style="color:var(--green-text);">□</span><span>Víctor simuló un envío en vivo</span></div>
-          <div style="display:flex; gap:0.5rem;"><span style="color:var(--green-text);">□</span><span>Costo por envío confirmado (Q1)</span></div>
-          <div style="display:flex; gap:0.5rem;"><span style="color:var(--green-text);">□</span><span>Módulo Cash entendido y validado</span></div>
-          <div style="display:flex; gap:0.5rem;"><span style="color:var(--green-text);">□</span><span>Local del piloto definido</span></div>
-          <div style="display:flex; gap:0.5rem;"><span style="color:var(--green-text);">□</span><span>Fecha de inicio de piloto acordada en la sesión</span></div>
+      <div class="proof-card">
+        <div class="pc-country">🇪🇨 Ecuador</div>
+        <div class="pc-name">Funky Fish</div>
+        <div class="pc-stat">Restaurante · tracking + WhatsApp · <span>activo desde 2024</span></div>
+      </div>
+      <div class="proof-card">
+        <div class="pc-country">🇨🇴 Colombia</div>
+        <div class="pc-name">Salvator's Pizza</div>
+        <div class="pc-stat">23 locales · <span>~11,000 envíos/mes</span> · flota + Picker</div>
+      </div>
+      <div class="proof-card">
+        <div class="pc-country">🇲🇽 México</div>
+        <div class="pc-name">Grupo Nikkori</div>
+        <div class="pc-stat">23 sucursales · canal propio · <span>Picker en integración</span></div>
+      </div>
+      <div class="proof-card">
+        <div class="pc-country">🇵🇪 Perú</div>
+        <div class="pc-name">Boticas Perú</div>
+        <div class="pc-stat">Farmacia · <span>cash module activo</span> · 5 locales</div>
+      </div>
+      <div class="proof-card">
+        <div class="pc-country">🌎 7 países</div>
+        <div class="pc-name">+500 negocios</div>
+        <div class="pc-stat">MX · CO · PE · EC · CL · AR · <span>creciendo</span></div>
+      </div>
+    </div>
+    <div class="sol-note">Operamos con negocios desde 500 hasta 140,000 envíos/mes. Encebollados CDL encaja perfectamente en nuestro ICP de canal propio con crecimiento.</div>
+  </div>
+</div>
+
+<!-- ─── SLIDE 10: SIGUIENTES PASOS (DARK) ─── -->
+<div class="slide slide-dark" id="slide10">
+  <div class="inner">
+    <div class="slide-tag">Próximos pasos</div>
+    <div class="slide-title">De la demo al primer pedido automatizado</div>
+    <div class="slide-sub">Simple, rápido, sin riesgo.</div>
+    <div class="steps-list">
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="st-title">Sesión demo (30–45 min)</div>
+          <div class="st-desc">Te mostramos el flujo completo: Qik recibe el pedido → Picker asigna motorizado → cliente recibe tracking. Simulamos un envío en vivo.</div>
         </div>
       </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="st-title">Piloto gratuito — 30 días sin costo de setup</div>
+          <div class="st-desc">Activamos 1 local para que pruebes el flujo real con pedidos reales. Sin compromisos. Solo pagas el fee por envío completado ($0.35).</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="st-title">Expansión a los 5 locales</div>
+          <div class="st-desc">Una vez validado el piloto, escalamos a todos los locales. La integración Qik→Picker ya está lista — es solo activar.</div>
+        </div>
+      </div>
+    </div>
+    <div class="guarantee-box">
+      <div class="gb-title">Garantía Picker</div>
+      <div class="gb-desc">Si en los primeros 30 días no ves mejora en tiempos de despacho o en la experiencia de tu cliente,<br/>no te cobramos el fee de orquestación. Tu operación no tiene nada que perder.</div>
     </div>
   </div>
+</div>
 
-
-  <!-- ══════════════════════════════════════
-       SLIDE 8 — FINANCIERO
-  ══════════════════════════════════════ -->
-  <div class="slide">
-    <div class="slide-header">
-      <div class="slide-title-block">
-        <span class="slide-tag">Ejercicio Financiero · Estimado · Pendiente validar Q15 con Víctor</span>
-        <h1>Business Case<br/><span style="color:var(--green-text)">Costo actual vs. Picker</span></h1>
-      </div>
-      <span class="badge badge-amber">⚠ Confirmar costo/envío actual en S2</span>
-    </div>
-
-    <div class="card-grid grid-4">
-      <div class="stat-chip">
-        <span class="value">2,000</span>
-        <span class="label">Envíos / mes</span>
-        <span class="desc">Canal propio</span>
-      </div>
-      <div class="stat-chip">
-        <span class="value amber">$10</span>
-        <span class="label">Ticket promedio (USD)</span>
-        <span class="desc">$20,000 USD facturación/mes</span>
-      </div>
-      <div class="stat-chip">
-        <span class="value red">?</span>
-        <span class="label">Costo / envío hoy (USD)</span>
-        <span class="desc">Pendiente confirmar en S2</span>
-      </div>
-      <div class="stat-chip">
-        <span class="value green">EC</span>
-        <span class="label">Fee Picker Ecuador</span>
-        <span class="desc">Confirmar tarifario EC antes de S2</span>
-      </div>
-    </div>
-
-    <div class="card" style="border-left:3px solid var(--amber);">
-      <h3>⚠️ Datos pendientes para construir el BC completo</h3>
-      <div style="display:flex; flex-direction:column; gap:0.4rem; margin-top:0.25rem; font-size:0.875rem; color:var(--sub);">
-        <div style="display:flex; gap:0.5rem;"><span style="color:var(--amber); flex-shrink:0;">1.</span><span><strong>Costo por envío que paga hoy a la empresa de motorizados</strong> (Q15) — sin esto no hay BC.</span></div>
-        <div style="display:flex; gap:0.5rem;"><span style="color:var(--amber); flex-shrink:0;">2.</span><span><strong>Cargo al cliente por envío</strong> (Q16) — si cobra $1–2 USD por envío, el costo neto de Picker se reduce.</span></div>
-        <div style="display:flex; gap:0.5rem;"><span style="color:var(--amber); flex-shrink:0;">3.</span><span><strong>Tarifario Picker Ecuador</strong> — confirmar fee/envío para Guayaquil 0–2 km antes de proponer número en la sesión.</span></div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h3>Escenarios proyectados — a completar tras S2</h3>
-      <div style="overflow-x:auto;">
-        <table>
-          <thead>
-            <tr>
-              <th>Escenario</th>
-              <th>Costo/envío hoy (USD)</th>
-              <th>Fee Picker/envío (USD)</th>
-              <th>Ahorro/envío</th>
-              <th>Ahorro / mes</th>
-              <th>Ahorro / año</th>
-              <th>ROI</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>Optimista</strong></td>
-              <td>$3.50</td>
-              <td>A confirmar</td>
-              <td style="color:var(--green-text); font-weight:700;">TBD</td>
-              <td style="color:var(--green-text);">TBD</td>
-              <td style="color:var(--green-text);">TBD</td>
-              <td><span class="badge badge-muted">TBD</span></td>
-            </tr>
-            <tr style="background:hsl(162 60% 97%);">
-              <td><strong>Base ⭐</strong></td>
-              <td>$2.50</td>
-              <td>A confirmar</td>
-              <td style="color:var(--green-text); font-weight:700;">TBD</td>
-              <td style="color:var(--green-text);">TBD</td>
-              <td style="color:var(--green-text);">TBD</td>
-              <td><span class="badge badge-muted">TBD</span></td>
-            </tr>
-            <tr>
-              <td><strong>Conservador</strong></td>
-              <td>$1.50</td>
-              <td>A confirmar</td>
-              <td style="color:var(--green-text); font-weight:700;">TBD</td>
-              <td style="color:var(--green-text);">TBD</td>
-              <td style="color:var(--green-text);">TBD</td>
-              <td><span class="badge badge-muted">TBD</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <p style="font-size:0.78rem; color:var(--muted); margin-top:0.5rem;">Completar estos números tras confirmar Q15 (costo/envío actual) y el tarifario Picker Ecuador.</p>
-    </div>
-
-    <div class="card-grid grid-2">
-      <div class="card" style="border-left:3px solid var(--green-text);">
-        <h3>Argumento de valor principal para Víctor</h3>
-        <div style="display:flex; flex-direction:column; gap:0.4rem; margin-top:0.25rem; font-size:0.875rem; color:var(--sub);">
-          <div style="display:flex; gap:0.4rem;"><span style="color:var(--green-text);">→</span><span>Las 2 personas de WhatsApp quedan libres — costo de oportunidad de personal dedicado</span></div>
-          <div style="display:flex; gap:0.4rem;"><span style="color:var(--green-text);">→</span><span>50% efectivo trazado automáticamente — elimina el riesgo de discrepancias y la gestión manual de caja</span></div>
-          <div style="display:flex; gap:0.4rem;"><span style="color:var(--green-text);">→</span><span>Menos pedidos perdidos en hora pico — orquestador Uber+Rappi siempre tiene disponibilidad</span></div>
-          <div style="display:flex; gap:0.4rem;"><span style="color:var(--green-text);">→</span><span>Datos para escalar — con métricas, la franquicia es replicable sin caos</span></div>
-        </div>
-      </div>
-      <div class="card" style="border-left:3px solid var(--celeste);">
-        <h3>Propuesta de piloto — estructura</h3>
-        <div style="display:flex; flex-direction:column; gap:0.4rem; margin-top:0.25rem; font-size:0.875rem; color:var(--sub);">
-          <div style="display:flex; gap:0.4rem;"><span style="color:var(--celeste);">→</span><span><strong>1 local</strong> — el de mayor volumen o el más fácil de operar</span></div>
-          <div style="display:flex; gap:0.4rem;"><span style="color:var(--celeste);">→</span><span><strong>2 semanas</strong> — tiempo suficiente para ver el flujo funcionando</span></div>
-          <div style="display:flex; gap:0.4rem;"><span style="color:var(--celeste);">→</span><span><strong>Sin cuota fija</strong> — Víctor paga solo por envíos realizados</span></div>
-          <div style="display:flex; gap:0.4rem;"><span style="color:var(--celeste);">→</span><span><strong>Sin compromiso</strong> — si no convence, no hay penalidad</span></div>
-          <div style="display:flex; gap:0.4rem;"><span style="color:var(--celeste);">→</span><span><strong>Picker deposita efectivo semanalmente</strong> — demostración real del Cash module</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-</div><!-- /slides-wrapper -->
+</div><!-- slides-wrap -->
 
 <script>
-  let current = 0;
-  const total = 8;
-
-  function goTo(n) {
-    const slides = document.querySelectorAll('.slide');
-    const tabs = document.querySelectorAll('.nav-tab');
-    slides[current].classList.remove('active');
-    tabs[current].classList.remove('active');
-    current = n;
-    slides[current].classList.add('active');
-    tabs[current].classList.add('active');
-    document.getElementById('counter').textContent = (current + 1) + ' / ' + total;
-  }
-
-  function next() { if (current < total - 1) goTo(current + 1); }
-  function prev() { if (current > 0) goTo(current - 1); }
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next();
-    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prev();
-  });
+const N = 11;
+let cur = 0;
+function go(n) {
+  document.getElementById('slide' + cur).classList.remove('active');
+  document.getElementById('tab' + cur).classList.remove('active');
+  cur = n;
+  document.getElementById('slide' + cur).classList.add('active');
+  document.getElementById('tab' + cur).classList.add('active');
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' && cur < N - 1) go(cur + 1);
+  if (e.key === 'ArrowLeft' && cur > 0) go(cur - 1);
+});
 </script>
 </body>
 </html>
